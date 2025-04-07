@@ -2,10 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Essential for responsiveness -->
     <title>Expense Tracker</title>
     <style>
-        /* Basic Reset & Body Style */
+        /* --- Global Styles & Basic Reset --- */
+        *, *::before, *::after {
+            box-sizing: border-box; /* Makes width/height include padding/border */
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
             margin: 0;
@@ -13,11 +16,13 @@
             background-color: #f8f9fa;
             color: #333;
             line-height: 1.6;
+            font-size: 16px; /* Base font size */
         }
         .container {
-            max-width: 1100px; /* Slightly wider for action column */
+            width: 95%; /* More fluid width */
+            max-width: 1100px; /* Keep a max width for larger screens */
             margin: 20px auto;
-            padding: 20px;
+            padding: 15px; /* Adjust padding */
             background-color: #fff;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             border-radius: 8px;
@@ -27,7 +32,9 @@
         h1 {
             color: #0056b3;
             text-align: center;
-            margin-bottom: 25px;
+            font-size: 1.8em; /* Responsive font size unit */
+            margin-top: 0;
+            margin-bottom: 20px;
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
         }
@@ -46,62 +53,42 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 15px;
+            gap: 15px; /* Spacing between items */
             padding: 15px;
-            background-color: #f8f9fa;
+            background-color: #f0f2f5; /* Slightly different background */
             border-radius: 5px;
-            border: 1px solid #eee;
+            border: 1px solid #dde;
         }
         .controls form { margin: 0; display: flex; align-items: center; gap: 8px;}
         .controls label { font-weight: 500; margin-right: 5px;}
         .controls input[type="number"] {
-            padding: 8px 10px;
-            width: 65px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 0.95em;
+            padding: 8px 10px; width: 65px; border: 1px solid #ccc;
+            border-radius: 4px; font-size: 1em; /* Use relative unit */
         }
         .button {
-            padding: 9px 18px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.95em;
+            padding: 9px 15px; /* Slightly adjusted padding */
+            color: white; border: none; border-radius: 4px; cursor: pointer;
+            font-size: 1em; /* Use relative unit */
             transition: background-color 0.2s ease;
-            text-decoration: none;
-            display: inline-block;
+            text-decoration: none; display: inline-block; text-align: center;
         }
-        .button-refresh { background-color: #28a745; } /* Green */
+        .button-refresh { background-color: #28a745; }
         .button-refresh:hover { background-color: #218838; }
-        .button-view { background-color: #007bff; } /* Blue */
+        .button-view { background-color: #007bff; }
         .button-view:hover { background-color: #0056b3; }
-        /* --- Style for the small X exclude button --- */
         .button-exclude {
-             background-color: #dc3545; /* Red */
-             color: white;
-             padding: 2px 7px; /* Smaller padding */
-             font-size: 0.9em; /* Smaller font */
-             line-height: 1; /* Adjust line height */
-             border-radius: 3px;
-             font-weight: bold;
+             background-color: #dc3545; color: white; padding: 2px 7px; font-size: 0.9em;
+             line-height: 1; border-radius: 3px; font-weight: bold;
         }
         .button-exclude:hover { background-color: #c82333; }
-        /* --- Style for the clear exclusions button --- */
-        .button-clear {
-             background-color: #6c757d; /* Gray */
-             margin-left: auto; /* Push clear button to the right */
-        }
+        .button-clear { background-color: #6c757d; }
         .button-clear:hover { background-color: #5a6268; }
-
+        .controls .form-clear-exclusions { margin-left: auto; } /* Keeps clear button generally to the right */
 
         /* Summary Section */
         .summary {
-            margin-bottom: 30px;
-            padding: 15px;
-            background-color: #e9ecef;
-            border-radius: 5px;
-            border: 1px solid #dee2e6;
+            margin-bottom: 30px; padding: 15px; background-color: #e9ecef;
+            border-radius: 5px; border: 1px solid #dee2e6;
         }
         .summary h2 {
             margin-top: 0; margin-bottom: 15px; text-align: center;
@@ -109,7 +96,8 @@
         }
         .summary-grid {
              display: grid;
-             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+             /* Already responsive: creates columns at least 140px wide */
+             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
              gap: 15px; text-align: center;
         }
         .summary-item {
@@ -122,38 +110,95 @@
         .summary-value.expense { color: #dc3545; }
         .summary-value.balance { color: #0056b3; }
 
+        /* --- Responsive Table Wrapper --- */
+        .table-responsive {
+            overflow-x: auto; /* Enable horizontal scrolling */
+            -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
+            margin-bottom: 30px;
+            border: 1px solid #dee2e6; /* Add border to the scrolling container */
+            border-radius: 5px;
+        }
+
         /* Transaction Table */
         table {
-            border-collapse: collapse; width: 100%; margin-bottom: 30px;
-            border: 1px solid #dee2e6;
+            border-collapse: collapse; width: 100%;
+            /* Removed bottom margin - handled by wrapper */
+            /* Removed border - handled by wrapper */
         }
         th, td {
-            border: 1px solid #dee2e6; padding: 10px 12px;
-            text-align: left; vertical-align: top;
+            border: none; /* Remove individual cell borders */
+            border-bottom: 1px solid #dee2e6; /* Use bottom borders for separation */
+            padding: 12px 15px; /* Increased padding */
+            text-align: left; vertical-align: middle; /* Align vertically */
+            white-space: nowrap; /* Prevent wrapping, rely on horizontal scroll */
         }
-        th { background-color: #e9ecef; font-weight: 600; white-space: nowrap; }
-        th.action-col, td.action-col { text-align: center; width: 50px; } /* Style Action column */
+        th {
+             background-color: #e9ecef; font-weight: 600;
+             position: sticky; top: 0; /* Make headers sticky during vertical scroll */
+             z-index: 1; /* Ensure headers stay above content */
+        }
+        th.action-col, td.action-col { text-align: center; width: 60px; } /* Slightly wider action */
+
+        tbody tr:last-child td {
+             border-bottom: none; /* Remove bottom border for last row */
+        }
         tbody tr:nth-child(even) { background-color: #f8f9fa; }
-        tbody tr:hover { background-color: #e9ecef; }
+        tbody tr:hover { background-color: #e2e6ea; } /* Slightly darker hover */
 
-        /* --- Style for excluded rows --- */
-        tbody tr.excluded-row {
-             opacity: 0.5;
-             background-color: #f8f9fa !important; /* Ensure background doesn't change on hover */
-             /* text-decoration: line-through; Optional */
-        }
-        tbody tr.excluded-row:hover {
-             opacity: 0.6; /* Slightly less dim on hover */
-        }
-        /* --- End excluded row style --- */
+        tbody tr.excluded-row { opacity: 0.6; font-style: italic; }
+        tbody tr.excluded-row:hover { opacity: 0.7; }
 
-        td.amount {
-            text-align: right;
-            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-            white-space: nowrap;
+        td.amount { text-align: right; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+        td.amount.income { color: #218838; font-weight: 500; } /* Darker green */
+        td.amount.expense { color: #c82333; } /* Darker red */
+
+        /* --- Media Query for Mobile Devices --- */
+        @media (max-width: 768px) {
+            body {
+                font-size: 15px; /* Slightly smaller base font on mobile */
+                -webkit-text-size-adjust: 100%; /* Prevent iOS font scaling */
+            }
+            .container {
+                width: 100%; /* Full width */
+                margin: 0;
+                padding: 10px; /* Reduce padding */
+                border-radius: 0; /* Remove radius on mobile */
+                box-shadow: none; /* Remove shadow on mobile */
+            }
+            h1 {
+                font-size: 1.6em;
+                margin-bottom: 15px;
+            }
+            .controls {
+                justify-content: center; /* Center items when they wrap */
+                gap: 10px;
+            }
+            /* Ensure clear button doesn't always force a new line if space allows */
+            .controls .form-clear-exclusions { margin-left: 0; }
+             /* Make clear button full width if it wraps */
+             .controls form:last-child { flex-basis: 100%; justify-content: center; }
+
+
+            .summary-grid { gap: 10px; }
+            .summary-item { padding: 8px; }
+            .summary-value { font-size: 1.1em; }
+
+            th, td { padding: 10px 12px; } /* Adjust table padding */
         }
-         td.amount.income { color: #28a745; font-weight: 500; }
-         td.amount.expense { color: #dc3545; }
+
+         @media (max-width: 480px) {
+             /* Further adjustments for very small screens */
+             h1 { font-size: 1.4em; }
+             .button { font-size: 0.9em; padding: 8px 12px;}
+             .controls label { font-size: 0.9em; }
+             .controls input[type="number"] { font-size: 0.9em; padding: 6px 8px; width: 55px;}
+             .summary h2 { font-size: 1.1em; }
+             .summary-label { font-size: 0.8em; }
+             .summary-value { font-size: 1em; }
+             th, td { padding: 8px 10px; font-size: 0.9em;}
+             .button-exclude { padding: 1px 5px; font-size: 0.8em;}
+
+         }
 
     </style>
 </head>
@@ -176,18 +221,18 @@
         <!-- Controls -->
         <div class="controls">
             <form action="{{ url_for('trigger_refresh') }}" method="POST">
-                <button type="submit" class="button button-refresh">Refresh Transactions</button>
+                <button type="submit" class="button button-refresh">Refresh</button> <!-- Shorter Text -->
             </form>
             <form action="{{ url_for('index') }}" method="GET">
-                 <label for="days">Show last:</label>
+                 <label for="days">Last:</label> <!-- Shorter Text -->
                  <input type="number" id="days" name="days" value="{{ current_days }}" min="1" max="365">
                  <label for="days">days</label>
                  <button type="submit" class="button button-view">View</button>
             </form>
             <!-- Clear Exclusions Button -->
-            {% if excluded_ids %} <!-- Only show if there are exclusions -->
-            <form action="{{ url_for('clear_exclusions') }}" method="POST" style="margin-left: auto;"> <!-- Pushes button right -->
-                 <button type="submit" class="button button-clear">Clear Exclusions ({{ excluded_ids|length }})</button>
+            {% if excluded_ids %}
+            <form action="{{ url_for('clear_exclusions', days=request.args.get('days')) }}" method="POST" class="form-clear-exclusions"> <!-- Preserve days & add class -->
+                 <button type="submit" class="button button-clear">Clear Excl. ({{ excluded_ids|length }})</button> <!-- Shorter Text -->
             </form>
             {% endif %}
         </div>
@@ -197,11 +242,11 @@
             <h2>Summary ({{ current_days }} Days) {% if excluded_ids %}<span style="font-weight: normal; font-size: 0.8em; color: #6c757d;">({{ excluded_ids|length }} item(s) excluded)</span>{% endif %}</h2>
             <div class="summary-grid">
                 <div class="summary-item">
-                    <span class="summary-label">Total Income</span>
+                    <span class="summary-label">Income</span> <!-- Shorter Text -->
                     <span class="summary-value income">${{ "%.2f"|format(total_income) }}</span>
                 </div>
                 <div class="summary-item">
-                    <span class="summary-label">Total Expenses</span>
+                    <span class="summary-label">Expenses</span> <!-- Shorter Text -->
                     <span class="summary-value expense">${{ "%.2f"|format(total_expenses) }}</span>
                 </div>
                 <div class="summary-item">
@@ -213,49 +258,48 @@
             </div>
         </div>
 
-        <!-- Transaction Table -->
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Account</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th style="text-align: right;">Amount</th>
-                    <th class="action-col">Action</th> <!-- New Action Header -->
-                </tr>
-            </thead>
-            <tbody>
-                {% for transaction in transactions %}
-                <!-- Add class if transaction ID is in the excluded set -->
-                <tr class="{% if transaction.id in excluded_ids %}excluded-row{% endif %}">
-                    <td>{{ transaction.date }}</td>
-                    <td>{{ transaction.account }}</td>
-                    <td>{{ transaction.name }}</td>
-                    <td>{{ transaction.category }}</td>
-                    <td class="amount {% if transaction.amount < 0 %}income{% else %}expense{% endif %}">
-                       ${{ "%.2f"|format(transaction.amount|abs) }}
-                    </td>
-                    <!-- New Action Column Cell -->
-                    <td class="action-col">
-                        <!-- Only show exclude button if NOT already excluded -->
-                        {% if transaction.id not in excluded_ids %}
-                        <form action="{{ url_for('exclude_transaction', days=request.args.get('days')) }}" method="POST" style="display: inline;"> <!-- Preserve days param -->
-                             <input type="hidden" name="transaction_id" value="{{ transaction.id }}">
-                             <button type="submit" class="button button-exclude" title="Exclude from Summary">X</button>
-                        </form>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;"> <!-- Increased colspan -->
-                        No transactions found for the selected period.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <!-- Responsive Table Wrapper -->
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Account</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th style="text-align: right;">Amount</th>
+                        <th class="action-col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr class="{% if transaction.id in excluded_ids %}excluded-row{% endif %}">
+                        <td>{{ transaction.date }}</td>
+                        <td>{{ transaction.account }}</td>
+                        <td>{{ transaction.name }}</td>
+                        <td>{{ transaction.category }}</td>
+                        <td class="amount {% if transaction.amount < 0 %}income{% else %}expense{% endif %}">
+                           ${{ "%.2f"|format(transaction.amount|abs) }}
+                        </td>
+                        <td class="action-col">
+                            {% if transaction.id not in excluded_ids %}
+                            <form action="{{ url_for('exclude_transaction', days=request.args.get('days')) }}" method="POST" style="display: inline;">
+                                 <input type="hidden" name="transaction_id" value="{{ transaction.id }}">
+                                 <button type="submit" class="button button-exclude" title="Exclude from Summary">X</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;">
+                            No transactions found for the selected period.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div> <!-- End table-responsive -->
 
     </div> <!-- End container -->
 
