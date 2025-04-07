@@ -1,0 +1,11 @@
+# Virtual Environment
+venv/
+*.pyc
+__pycache__/
+
+# Secrets / Credentials
+.env # Keep this!
+
+# OS specific
+.DS_Store
+Thumbs.db
