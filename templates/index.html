@@ -65,9 +65,9 @@
         tbody tr.excluded-row { opacity: 0.6; font-style: italic; background-color: #f8f9fa !important; }
         tbody tr.excluded-row:hover { opacity: 0.7; }
         td.amount { text-align: right; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
-        /* Use Plaid's original amount sign: > 0 is income */
-        td.amount.income { color: #218838; font-weight: 500; }
-        td.amount.expense { color: #c82333; }
+        /* Apply income/expense class based on Plaid's original amount sign */
+        td.amount.income { color: #218838; font-weight: 500; } /* Amount > 0 */
+        td.amount.expense { color: #c82333; }                /* Amount < 0 */
 
         /* Media Queries */
         @media (max-width: 768px) {
@@ -141,7 +141,10 @@
                         <td>{{ transaction.name }}</td>
                         <td>{{ transaction.category }}</td>
                         <!-- Apply class based on ORIGINAL amount sign -->
-                        <td class="amount {% if transaction.amount > 0 %}income{% else %}expense{% endif %}"> ${{ "{:,.2f}".format(transaction.amount|abs) }} </td>
+                        <td class="amount {% if transaction.amount > 0 %}income{% else %}expense{% endif %}">
+                           <!-- Display absolute value, format with commas -->
+                           ${{ "{:,.2f}".format(transaction.amount|abs) }}
+                        </td>
                         <td class="action-col">
                             <!-- Show button only if NOT in combined excluded set -->
                             {% if transaction.id not in combined_excluded_ids %}
