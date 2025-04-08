@@ -5,46 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
     <style>
-        /* --- Styles remain the same as the previous mobile-friendly version --- */
-        /* Basic Reset & Body Style */
+        /* --- Styles remain the same --- */
         *, *::before, *::after { box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            margin: 0; padding: 0; background-color: #f8f9fa;
-            color: #333; line-height: 1.6; font-size: 16px;
-        }
-        .container {
-            width: 95%; max-width: 1100px; margin: 20px auto; padding: 15px;
-            background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 8px;
-        }
-        h1 {
-            color: #0056b3; text-align: center; font-size: 1.8em; margin-top: 0;
-            margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;
-        }
-        /* Flash Messages */
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; margin: 0; padding: 0; background-color: #f8f9fa; color: #333; line-height: 1.6; font-size: 16px; }
+        .container { width: 95%; max-width: 1100px; margin: 20px auto; padding: 15px; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 8px; }
+        h1 { color: #0056b3; text-align: center; font-size: 1.8em; margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         .flash-messages { list-style: none; padding: 0; margin: 0 0 20px 0; }
         .flash-messages li { padding: 12px 15px; margin-bottom: 10px; border-radius: 4px; border: 1px solid transparent; }
-        .flash-success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
-        .flash-danger { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
-        .flash-warning { background-color: #fff3cd; color: #856404; border-color: #ffeeba; }
-        .flash-info { background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb; }
-        /* Controls Area */
-        .controls {
-            margin-bottom: 25px; display: flex; flex-wrap: wrap; align-items: center;
-            gap: 15px; padding: 15px; background-color: #f0f2f5;
-            border-radius: 5px; border: 1px solid #dde;
-        }
+        .flash-success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; } .flash-danger { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; } .flash-warning { background-color: #fff3cd; color: #856404; border-color: #ffeeba; } .flash-info { background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb; }
+        .controls { margin-bottom: 25px; display: flex; flex-wrap: wrap; align-items: center; gap: 15px; padding: 15px; background-color: #f0f2f5; border-radius: 5px; border: 1px solid #dde; }
         .controls form { margin: 0; display: flex; align-items: center; gap: 8px;}
         .controls label { font-weight: 500; margin-right: 5px; white-space: nowrap;}
         .controls input[type="date"] { padding: 7px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em; font-family: inherit; line-height: normal; }
         .button { padding: 9px 15px; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; transition: background-color 0.2s ease; text-decoration: none; display: inline-block; text-align: center; }
         .button-refresh { background-color: #28a745; } .button-refresh:hover { background-color: #218838; }
         .button-view { background-color: #007bff; } .button-view:hover { background-color: #0056b3; }
-        .button-exclude { background-color: #ffc107; color: #333; padding: 2px 7px; font-size: 0.9em; line-height: 1; border-radius: 3px; font-weight: bold; border: 1px solid #dda700; }
-        .button-exclude:hover { background-color: #e0a800; }
+        .button-exclude { background-color: #ffc107; color: #333; padding: 2px 7px; font-size: 0.9em; line-height: 1; border-radius: 3px; font-weight: bold; border: 1px solid #dda700; } .button-exclude:hover { background-color: #e0a800; }
+        /* --- Include button style --- */
+        .button-include { background-color: #17a2b8; color: white; /* Info blue */ padding: 2px 7px; font-size: 0.9em; line-height: 1; border-radius: 3px; font-weight: bold; border: 1px solid #117a8b;}
+        .button-include:hover { background-color: #138496; }
         .button-clear { background-color: #6c757d; } .button-clear:hover { background-color: #5a6268; }
         .controls .form-clear-exclusions { margin-left: auto; }
-        /* Summary Section */
         .summary { margin-bottom: 30px; padding: 15px; background-color: #e9ecef; border-radius: 5px; border: 1px solid #dee2e6; }
         .summary h2 { margin-top: 0; margin-bottom: 15px; text-align: center; font-size: 1.3em; color: #333; }
         .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; text-align: center; }
@@ -52,9 +33,7 @@
         .summary-label { display: block; font-size: 0.9em; color: #6c757d; margin-bottom: 5px; }
         .summary-value { font-size: 1.2em; font-weight: 600; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
         .summary-value.income { color: #28a745; } .summary-value.expense { color: #dc3545; } .summary-value.balance { color: #0056b3; }
-        /* Responsive Table Wrapper */
         .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 30px; border: 1px solid #dee2e6; border-radius: 5px;}
-        /* Transaction Table */
         table { border-collapse: collapse; width: 100%; }
         th, td { border: none; border-bottom: 1px solid #dee2e6; padding: 12px 15px; text-align: left; vertical-align: middle; white-space: nowrap; }
         th { background-color: #e9ecef; font-weight: 600; position: sticky; top: 0; z-index: 1; }
@@ -65,12 +44,9 @@
         tbody tr.excluded-row { opacity: 0.6; font-style: italic; background-color: #f8f9fa !important; }
         tbody tr.excluded-row:hover { opacity: 0.7; }
         td.amount { text-align: right; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
-        /* --- !!! EXPLICITLY INVERTED CSS CLASS LOGIC !!! --- */
-        /* If Plaid amount is NEGATIVE, style as income (green) */
-        td.amount.income { color: #218838; font-weight: 500; }
-        /* If Plaid amount is POSITIVE, style as expense (red) */
-        td.amount.expense { color: #c82333; }
-
+        /* --- INVERTED CSS CLASS LOGIC for Coloring --- */
+        td.amount.income { color: #218838; font-weight: 500; } /* Plaid Amount < 0 */
+        td.amount.expense { color: #c82333; }                /* Plaid Amount > 0 */
         /* Media Queries */
         @media (max-width: 768px) {
             body { font-size: 15px; -webkit-text-size-adjust: 100%; }
@@ -91,6 +67,7 @@
              .summary h2 { font-size: 1.1em; } .summary-label { font-size: 0.8em; } .summary-value { font-size: 1em; }
              th, td { padding: 8px 10px; font-size: 0.9em;}
              .button-exclude { padding: 1px 5px; font-size: 0.8em;}
+             .button-include { padding: 1px 5px; font-size: 0.8em;} /* Style include button on mobile */
          }
     </style>
 </head>
@@ -136,25 +113,33 @@
                 <thead> <tr> <th>Date</th> <th>Account</th> <th>Name</th> <th>Category</th> <th style="text-align: right;">Amount</th> <th class="action-col">Action</th> </tr> </thead>
                 <tbody>
                     {% for transaction in transactions %}
-                    <!-- Use combined set for visual exclusion -->
+                    <!-- Dim row if in combined excluded set -->
                     <tr class="{% if transaction.id in combined_excluded_ids %}excluded-row{% endif %}">
                         <td>{{ transaction.date }}</td>
                         <td>{{ transaction.account }}</td>
                         <td>{{ transaction.name }}</td>
                         <td>{{ transaction.category }}</td>
-                        <!-- !!! EXPLICITLY INVERTED CLASS LOGIC !!! -->
-                        <!-- Apply income style if Plaid amount is NEGATIVE -->
+                        <!-- Apply class based on INVERTED amount sign -->
                         <td class="amount {% if transaction.amount < 0 %}income{% else %}expense{% endif %}">
-                           <!-- Display absolute value, format with commas -->
                            ${{ "{:,.2f}".format(transaction.amount|abs) }}
                         </td>
                         <td class="action-col">
-                            <!-- Show button only if NOT in combined excluded set -->
-                            {% if transaction.id not in combined_excluded_ids %}
-                            <form action="{{ url_for('exclude_transaction', start_date=start_date_value, end_date=end_date_value) }}" method="POST" style="display: inline;">
-                                 <input type="hidden" name="transaction_id" value="{{ transaction.id }}">
-                                 <button type="submit" class="button button-exclude" title="Exclude from Summary">X</button>
-                            </form>
+                            <!-- Logic for which button to show -->
+                            {% if transaction.id in user_excluded_ids %}
+                                <!-- Manually excluded: Show Include (+) button -->
+                                <form action="{{ url_for('include_transaction', start_date=start_date_value, end_date=end_date_value) }}" method="POST" style="display: inline;">
+                                     <input type="hidden" name="transaction_id" value="{{ transaction.id }}">
+                                     <button type="submit" class="button button-include" title="Include in Summary">+</button>
+                                </form>
+                            {% elif transaction.id not in combined_excluded_ids %}
+                                <!-- Not excluded at all: Show Exclude (X) button -->
+                                <form action="{{ url_for('exclude_transaction', start_date=start_date_value, end_date=end_date_value) }}" method="POST" style="display: inline;">
+                                     <input type="hidden" name="transaction_id" value="{{ transaction.id }}">
+                                     <button type="submit" class="button button-exclude" title="Exclude from Summary">X</button>
+                                </form>
+                            {% else %}
+                                <!-- Only Auto-excluded (transfer): Show nothing -->
+                                  <!-- Optional: non-breaking space for alignment -->
                             {% endif %}
                         </td>
                     </tr>
