@@ -218,9 +218,9 @@ def index():
         start_date_value=start_date_display.strftime('%Y-%m-%d'),
         end_date_value=end_date_display.strftime('%Y-%m-%d'),
         combined_excluded_ids=combined_excluded_ids, # Set for dimming/calculation
-        user_excluded_ids=user_excluded_ids # List for button logic
+        user_excluded_ids=user_excluded_ids, # List for include button logic
+        user_excluded_count=len(user_excluded_ids) # <-- ADD THIS LINE
         )
-
 
 @app.route('/refresh', methods=['POST'])
 def trigger_refresh():

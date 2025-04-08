@@ -21,9 +21,7 @@
         .button-refresh { background-color: #28a745; } .button-refresh:hover { background-color: #218838; }
         .button-view { background-color: #007bff; } .button-view:hover { background-color: #0056b3; }
         .button-exclude { background-color: #ffc107; color: #333; padding: 2px 7px; font-size: 0.9em; line-height: 1; border-radius: 3px; font-weight: bold; border: 1px solid #dda700; } .button-exclude:hover { background-color: #e0a800; }
-        /* --- Include button style --- */
-        .button-include { background-color: #17a2b8; color: white; /* Info blue */ padding: 2px 7px; font-size: 0.9em; line-height: 1; border-radius: 3px; font-weight: bold; border: 1px solid #117a8b;}
-        .button-include:hover { background-color: #138496; }
+        .button-include { background-color: #17a2b8; color: white; padding: 2px 7px; font-size: 0.9em; line-height: 1; border-radius: 3px; font-weight: bold; border: 1px solid #117a8b;} .button-include:hover { background-color: #138496; }
         .button-clear { background-color: #6c757d; } .button-clear:hover { background-color: #5a6268; }
         .controls .form-clear-exclusions { margin-left: auto; }
         .summary { margin-bottom: 30px; padding: 15px; background-color: #e9ecef; border-radius: 5px; border: 1px solid #dee2e6; }
@@ -44,7 +42,6 @@
         tbody tr.excluded-row { opacity: 0.6; font-style: italic; background-color: #f8f9fa !important; }
         tbody tr.excluded-row:hover { opacity: 0.7; }
         td.amount { text-align: right; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
-        /* --- INVERTED CSS CLASS LOGIC for Coloring --- */
         td.amount.income { color: #218838; font-weight: 500; } /* Plaid Amount < 0 */
         td.amount.expense { color: #c82333; }                /* Plaid Amount > 0 */
         /* Media Queries */
@@ -67,12 +64,11 @@
              .summary h2 { font-size: 1.1em; } .summary-label { font-size: 0.8em; } .summary-value { font-size: 1em; }
              th, td { padding: 8px 10px; font-size: 0.9em;}
              .button-exclude { padding: 1px 5px; font-size: 0.8em;}
-             .button-include { padding: 1px 5px; font-size: 0.8em;} /* Style include button on mobile */
+             .button-include { padding: 1px 5px; font-size: 0.8em;}
          }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Expense Tracker</h1>
 
@@ -89,7 +85,6 @@
                  <label for="end_date">To:</label> <input type="date" id="end_date" name="end_date" value="{{ end_date_value }}">
                  <button type="submit" class="button button-view">View</button>
             </form>
-            <!-- Clear MANUAL Exclusions Button - Use user_excluded_count -->
             {% if user_excluded_count > 0 %}
             <form action="{{ url_for('clear_exclusions', start_date=start_date_value, end_date=end_date_value) }}" method="POST" class="form-clear-exclusions">
                  <button type="submit" class="button button-clear">Clear Manual Excl. ({{ user_excluded_count }})</button>
@@ -113,33 +108,28 @@
                 <thead> <tr> <th>Date</th> <th>Account</th> <th>Name</th> <th>Category</th> <th style="text-align: right;">Amount</th> <th class="action-col">Action</th> </tr> </thead>
                 <tbody>
                     {% for transaction in transactions %}
-                    <!-- Dim row if in combined excluded set -->
                     <tr class="{% if transaction.id in combined_excluded_ids %}excluded-row{% endif %}">
-                        <td>{{ transaction.date }}</td>
+                        <!-- Apply strftime formatting to the date object -->
+                        <td>{{ transaction.date.strftime('%d %b %Y') }}</td>
                         <td>{{ transaction.account }}</td>
                         <td>{{ transaction.name }}</td>
                         <td>{{ transaction.category }}</td>
-                        <!-- Apply class based on INVERTED amount sign -->
                         <td class="amount {% if transaction.amount < 0 %}income{% else %}expense{% endif %}">
                            ${{ "{:,.2f}".format(transaction.amount|abs) }}
                         </td>
                         <td class="action-col">
-                            <!-- Logic for which button to show -->
                             {% if transaction.id in user_excluded_ids %}
-                                <!-- Manually excluded: Show Include (+) button -->
                                 <form action="{{ url_for('include_transaction', start_date=start_date_value, end_date=end_date_value) }}" method="POST" style="display: inline;">
                                      <input type="hidden" name="transaction_id" value="{{ transaction.id }}">
                                      <button type="submit" class="button button-include" title="Include in Summary">+</button>
                                 </form>
                             {% elif transaction.id not in combined_excluded_ids %}
-                                <!-- Not excluded at all: Show Exclude (X) button -->
                                 <form action="{{ url_for('exclude_transaction', start_date=start_date_value, end_date=end_date_value) }}" method="POST" style="display: inline;">
                                      <input type="hidden" name="transaction_id" value="{{ transaction.id }}">
                                      <button type="submit" class="button button-exclude" title="Exclude from Summary">X</button>
                                 </form>
                             {% else %}
-                                <!-- Only Auto-excluded (transfer): Show nothing -->
-                                  <!-- Optional: non-breaking space for alignment -->
+                                 
                             {% endif %}
                         </td>
                     </tr>
