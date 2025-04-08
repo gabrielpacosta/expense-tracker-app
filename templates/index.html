@@ -2,43 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Essential for responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
     <style>
-        /* --- Global Styles & Basic Reset --- */
-        *, *::before, *::after {
-            box-sizing: border-box; /* Makes width/height include padding/border */
-        }
+        /* --- Styles remain the same as the previous mobile-friendly version --- */
+        /* Basic Reset & Body Style */
+        *, *::before, *::after { box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-            color: #333;
-            line-height: 1.6;
-            font-size: 16px; /* Base font size */
+            margin: 0; padding: 0; background-color: #f8f9fa;
+            color: #333; line-height: 1.6; font-size: 16px;
         }
         .container {
-            width: 95%; /* More fluid width */
-            max-width: 1100px; /* Keep a max width for larger screens */
-            margin: 20px auto;
-            padding: 15px; /* Adjust padding */
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border-radius: 8px;
+            width: 95%; max-width: 1100px; margin: 20px auto; padding: 15px;
+            background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 8px;
         }
-
-        /* Heading */
         h1 {
-            color: #0056b3;
-            text-align: center;
-            font-size: 1.8em; /* Responsive font size unit */
-            margin-top: 0;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
+            color: #0056b3; text-align: center; font-size: 1.8em; margin-top: 0;
+            margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;
         }
-
         /* Flash Messages */
         .flash-messages { list-style: none; padding: 0; margin: 0 0 20px 0; }
         .flash-messages li { padding: 12px 15px; margin-bottom: 10px; border-radius: 4px; border: 1px solid transparent; }
@@ -46,30 +28,22 @@
         .flash-danger { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
         .flash-warning { background-color: #fff3cd; color: #856404; border-color: #ffeeba; }
         .flash-info { background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb; }
-
         /* Controls Area */
         .controls {
-            margin-bottom: 25px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 15px; /* Spacing between items */
-            padding: 15px;
-            background-color: #f0f2f5; /* Slightly different background */
-            border-radius: 5px;
-            border: 1px solid #dde;
+            margin-bottom: 25px; display: flex; flex-wrap: wrap; align-items: center;
+            gap: 15px; padding: 15px; background-color: #f0f2f5;
+            border-radius: 5px; border: 1px solid #dde;
         }
         .controls form { margin: 0; display: flex; align-items: center; gap: 8px;}
-        .controls label { font-weight: 500; margin-right: 5px;}
-        .controls input[type="number"] {
-            padding: 8px 10px; width: 65px; border: 1px solid #ccc;
-            border-radius: 4px; font-size: 1em; /* Use relative unit */
+        .controls label { font-weight: 500; margin-right: 5px; white-space: nowrap;} /* Prevent label wrapping */
+        /* Style for date inputs */
+        .controls input[type="date"] {
+            padding: 7px 10px; border: 1px solid #ccc; border-radius: 4px;
+            font-size: 1em; font-family: inherit; line-height: normal;
         }
         .button {
-            padding: 9px 15px; /* Slightly adjusted padding */
-            color: white; border: none; border-radius: 4px; cursor: pointer;
-            font-size: 1em; /* Use relative unit */
-            transition: background-color 0.2s ease;
+            padding: 9px 15px; color: white; border: none; border-radius: 4px; cursor: pointer;
+            font-size: 1em; transition: background-color 0.2s ease;
             text-decoration: none; display: inline-block; text-align: center;
         }
         .button-refresh { background-color: #28a745; }
@@ -83,123 +57,59 @@
         .button-exclude:hover { background-color: #c82333; }
         .button-clear { background-color: #6c757d; }
         .button-clear:hover { background-color: #5a6268; }
-        .controls .form-clear-exclusions { margin-left: auto; } /* Keeps clear button generally to the right */
-
+        .controls .form-clear-exclusions { margin-left: auto; }
         /* Summary Section */
-        .summary {
-            margin-bottom: 30px; padding: 15px; background-color: #e9ecef;
-            border-radius: 5px; border: 1px solid #dee2e6;
-        }
-        .summary h2 {
-            margin-top: 0; margin-bottom: 15px; text-align: center;
-            font-size: 1.3em; color: #333;
-        }
-        .summary-grid {
-             display: grid;
-             /* Already responsive: creates columns at least 140px wide */
-             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-             gap: 15px; text-align: center;
-        }
-        .summary-item {
-             padding: 10px; background-color: #fff; border-radius: 4px;
-             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
+        .summary { margin-bottom: 30px; padding: 15px; background-color: #e9ecef; border-radius: 5px; border: 1px solid #dee2e6; }
+        .summary h2 { margin-top: 0; margin-bottom: 15px; text-align: center; font-size: 1.3em; color: #333; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; text-align: center; }
+        .summary-item { padding: 10px; background-color: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .summary-label { display: block; font-size: 0.9em; color: #6c757d; margin-bottom: 5px; }
         .summary-value { font-size: 1.2em; font-weight: 600; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
         .summary-value.income { color: #28a745; }
         .summary-value.expense { color: #dc3545; }
         .summary-value.balance { color: #0056b3; }
-
-        /* --- Responsive Table Wrapper --- */
-        .table-responsive {
-            overflow-x: auto; /* Enable horizontal scrolling */
-            -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
-            margin-bottom: 30px;
-            border: 1px solid #dee2e6; /* Add border to the scrolling container */
-            border-radius: 5px;
-        }
-
+        /* Responsive Table Wrapper */
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 30px; border: 1px solid #dee2e6; border-radius: 5px;}
         /* Transaction Table */
-        table {
-            border-collapse: collapse; width: 100%;
-            /* Removed bottom margin - handled by wrapper */
-            /* Removed border - handled by wrapper */
-        }
-        th, td {
-            border: none; /* Remove individual cell borders */
-            border-bottom: 1px solid #dee2e6; /* Use bottom borders for separation */
-            padding: 12px 15px; /* Increased padding */
-            text-align: left; vertical-align: middle; /* Align vertically */
-            white-space: nowrap; /* Prevent wrapping, rely on horizontal scroll */
-        }
-        th {
-             background-color: #e9ecef; font-weight: 600;
-             position: sticky; top: 0; /* Make headers sticky during vertical scroll */
-             z-index: 1; /* Ensure headers stay above content */
-        }
-        th.action-col, td.action-col { text-align: center; width: 60px; } /* Slightly wider action */
-
-        tbody tr:last-child td {
-             border-bottom: none; /* Remove bottom border for last row */
-        }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: none; border-bottom: 1px solid #dee2e6; padding: 12px 15px; text-align: left; vertical-align: middle; white-space: nowrap; }
+        th { background-color: #e9ecef; font-weight: 600; position: sticky; top: 0; z-index: 1; }
+        th.action-col, td.action-col { text-align: center; width: 60px; }
+        tbody tr:last-child td { border-bottom: none; }
         tbody tr:nth-child(even) { background-color: #f8f9fa; }
-        tbody tr:hover { background-color: #e2e6ea; } /* Slightly darker hover */
-
+        tbody tr:hover { background-color: #e2e6ea; }
         tbody tr.excluded-row { opacity: 0.6; font-style: italic; }
         tbody tr.excluded-row:hover { opacity: 0.7; }
-
         td.amount { text-align: right; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
-        td.amount.income { color: #218838; font-weight: 500; } /* Darker green */
-        td.amount.expense { color: #c82333; } /* Darker red */
+        td.amount.income { color: #218838; font-weight: 500; }
+        td.amount.expense { color: #c82333; }
 
-        /* --- Media Query for Mobile Devices --- */
+        /* Media Queries */
         @media (max-width: 768px) {
-            body {
-                font-size: 15px; /* Slightly smaller base font on mobile */
-                -webkit-text-size-adjust: 100%; /* Prevent iOS font scaling */
-            }
-            .container {
-                width: 100%; /* Full width */
-                margin: 0;
-                padding: 10px; /* Reduce padding */
-                border-radius: 0; /* Remove radius on mobile */
-                box-shadow: none; /* Remove shadow on mobile */
-            }
-            h1 {
-                font-size: 1.6em;
-                margin-bottom: 15px;
-            }
-            .controls {
-                justify-content: center; /* Center items when they wrap */
-                gap: 10px;
-            }
-            /* Ensure clear button doesn't always force a new line if space allows */
-            .controls .form-clear-exclusions { margin-left: 0; }
-             /* Make clear button full width if it wraps */
-             .controls form:last-child { flex-basis: 100%; justify-content: center; }
-
+            body { font-size: 15px; -webkit-text-size-adjust: 100%; }
+            .container { width: 100%; margin: 0; padding: 10px; border-radius: 0; box-shadow: none; }
+            h1 { font-size: 1.6em; margin-bottom: 15px; }
+            .controls { justify-content: center; gap: 10px; flex-direction: column; align-items: stretch; } /* Stack controls vertically */
+            .controls form { justify-content: center;} /* Center items within forms */
+            .controls .form-clear-exclusions { margin-left: 0; margin-top: 10px; } /* Adjust margin for stacking */
+            .controls input[type="date"] { width: auto; flex-grow: 1;} /* Allow date inputs to grow */
 
             .summary-grid { gap: 10px; }
             .summary-item { padding: 8px; }
             .summary-value { font-size: 1.1em; }
-
-            th, td { padding: 10px 12px; } /* Adjust table padding */
+            th, td { padding: 10px 12px; }
         }
-
          @media (max-width: 480px) {
-             /* Further adjustments for very small screens */
              h1 { font-size: 1.4em; }
              .button { font-size: 0.9em; padding: 8px 12px;}
              .controls label { font-size: 0.9em; }
-             .controls input[type="number"] { font-size: 0.9em; padding: 6px 8px; width: 55px;}
+             .controls input[type="date"] { font-size: 0.9em; padding: 6px 8px;}
              .summary h2 { font-size: 1.1em; }
              .summary-label { font-size: 0.8em; }
              .summary-value { font-size: 1em; }
              th, td { padding: 8px 10px; font-size: 0.9em;}
              .button-exclude { padding: 1px 5px; font-size: 0.8em;}
-
          }
-
     </style>
 </head>
 <body>
@@ -220,39 +130,45 @@
 
         <!-- Controls -->
         <div class="controls">
-            <form action="{{ url_for('trigger_refresh') }}" method="POST">
-                <button type="submit" class="button button-refresh">Refresh</button> <!-- Shorter Text -->
+            <form action="{{ url_for('trigger_refresh', start_date=start_date_value, end_date=end_date_value) }}" method="POST"> <!-- Pass dates to refresh -->
+                <button type="submit" class="button button-refresh">Refresh</button>
             </form>
-            <form action="{{ url_for('index') }}" method="GET">
-                 <label for="days">Last:</label> <!-- Shorter Text -->
-                 <input type="number" id="days" name="days" value="{{ current_days }}" min="1" max="365">
-                 <label for="days">days</label>
+            <!-- Date Range Form -->
+            <form action="{{ url_for('index') }}" method="GET" style="flex-grow: 1; justify-content: center;"> <!-- Allow this form to grow -->
+                 <label for="start_date">From:</label>
+                 <input type="date" id="start_date" name="start_date" value="{{ start_date_value }}">
+                 <label for="end_date">To:</label>
+                 <input type="date" id="end_date" name="end_date" value="{{ end_date_value }}">
                  <button type="submit" class="button button-view">View</button>
             </form>
             <!-- Clear Exclusions Button -->
             {% if excluded_ids %}
-            <form action="{{ url_for('clear_exclusions', days=request.args.get('days')) }}" method="POST" class="form-clear-exclusions"> <!-- Preserve days & add class -->
-                 <button type="submit" class="button button-clear">Clear Excl. ({{ excluded_ids|length }})</button> <!-- Shorter Text -->
+            <form action="{{ url_for('clear_exclusions', start_date=start_date_value, end_date=end_date_value) }}" method="POST" class="form-clear-exclusions"> <!-- Pass dates -->
+                 <button type="submit" class="button button-clear">Clear Excl. ({{ excluded_ids|length }})</button>
             </form>
             {% endif %}
         </div>
 
         <!-- Summary Section -->
         <div class="summary">
-            <h2>Summary ({{ current_days }} Days) {% if excluded_ids %}<span style="font-weight: normal; font-size: 0.8em; color: #6c757d;">({{ excluded_ids|length }} item(s) excluded)</span>{% endif %}</h2>
+            <!-- Display date range in summary -->
+            <h2>Summary ({{ start_date_value }} to {{ end_date_value }}) {% if excluded_ids %}<span style="font-weight: normal; font-size: 0.8em; color: #6c757d;">({{ excluded_ids|length }} item(s) excluded)</span>{% endif %}</h2>
             <div class="summary-grid">
                 <div class="summary-item">
-                    <span class="summary-label">Income</span> <!-- Shorter Text -->
-                    <span class="summary-value income">${{ "%.2f"|format(total_income) }}</span>
+                    <span class="summary-label">Income</span>
+                    <!-- Add comma formatting -->
+                    <span class="summary-value income">${{ "{:,.2f}".format(total_income) }}</span>
                 </div>
                 <div class="summary-item">
-                    <span class="summary-label">Expenses</span> <!-- Shorter Text -->
-                    <span class="summary-value expense">${{ "%.2f"|format(total_expenses) }}</span>
+                    <span class="summary-label">Expenses</span>
+                    <!-- Add comma formatting -->
+                    <span class="summary-value expense">${{ "{:,.2f}".format(total_expenses) }}</span>
                 </div>
                 <div class="summary-item">
                     <span class="summary-label">Net Balance</span>
+                    <!-- Add comma formatting -->
                     <span class="summary-value balance {% if balance >= 0 %}income{% else %}expense{% endif %}">
-                       ${{ "%.2f"|format(balance) }}
+                       ${{ "{:,.2f}".format(balance) }}
                     </span>
                 </div>
             </div>
@@ -279,11 +195,13 @@
                         <td>{{ transaction.name }}</td>
                         <td>{{ transaction.category }}</td>
                         <td class="amount {% if transaction.amount < 0 %}income{% else %}expense{% endif %}">
-                           ${{ "%.2f"|format(transaction.amount|abs) }}
+                           <!-- Add comma formatting and keep absolute value -->
+                           ${{ "{:,.2f}".format(transaction.amount|abs) }}
                         </td>
                         <td class="action-col">
                             {% if transaction.id not in excluded_ids %}
-                            <form action="{{ url_for('exclude_transaction', days=request.args.get('days')) }}" method="POST" style="display: inline;">
+                            <!-- Pass dates to exclude action -->
+                            <form action="{{ url_for('exclude_transaction', start_date=start_date_value, end_date=end_date_value) }}" method="POST" style="display: inline;">
                                  <input type="hidden" name="transaction_id" value="{{ transaction.id }}">
                                  <button type="submit" class="button button-exclude" title="Exclude from Summary">X</button>
                             </form>
