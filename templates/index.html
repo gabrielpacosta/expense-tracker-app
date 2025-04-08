@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
     <style>
-        /* --- Styles remain the same as the previous mobile-friendly version --- */
+        /* --- Styles remain the same --- */
         /* Basic Reset & Body Style */
         *, *::before, *::after { box-sizing: border-box; }
         body {
@@ -35,28 +35,14 @@
             border-radius: 5px; border: 1px solid #dde;
         }
         .controls form { margin: 0; display: flex; align-items: center; gap: 8px;}
-        .controls label { font-weight: 500; margin-right: 5px; white-space: nowrap;} /* Prevent label wrapping */
-        /* Style for date inputs */
-        .controls input[type="date"] {
-            padding: 7px 10px; border: 1px solid #ccc; border-radius: 4px;
-            font-size: 1em; font-family: inherit; line-height: normal;
-        }
-        .button {
-            padding: 9px 15px; color: white; border: none; border-radius: 4px; cursor: pointer;
-            font-size: 1em; transition: background-color 0.2s ease;
-            text-decoration: none; display: inline-block; text-align: center;
-        }
-        .button-refresh { background-color: #28a745; }
-        .button-refresh:hover { background-color: #218838; }
-        .button-view { background-color: #007bff; }
-        .button-view:hover { background-color: #0056b3; }
-        .button-exclude {
-             background-color: #dc3545; color: white; padding: 2px 7px; font-size: 0.9em;
-             line-height: 1; border-radius: 3px; font-weight: bold;
-        }
-        .button-exclude:hover { background-color: #c82333; }
-        .button-clear { background-color: #6c757d; }
-        .button-clear:hover { background-color: #5a6268; }
+        .controls label { font-weight: 500; margin-right: 5px; white-space: nowrap;}
+        .controls input[type="date"] { padding: 7px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em; font-family: inherit; line-height: normal; }
+        .button { padding: 9px 15px; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; transition: background-color 0.2s ease; text-decoration: none; display: inline-block; text-align: center; }
+        .button-refresh { background-color: #28a745; } .button-refresh:hover { background-color: #218838; }
+        .button-view { background-color: #007bff; } .button-view:hover { background-color: #0056b3; }
+        .button-exclude { background-color: #ffc107; color: #333; padding: 2px 7px; font-size: 0.9em; line-height: 1; border-radius: 3px; font-weight: bold; border: 1px solid #dda700; }
+        .button-exclude:hover { background-color: #e0a800; }
+        .button-clear { background-color: #6c757d; } .button-clear:hover { background-color: #5a6268; }
         .controls .form-clear-exclusions { margin-left: auto; }
         /* Summary Section */
         .summary { margin-bottom: 30px; padding: 15px; background-color: #e9ecef; border-radius: 5px; border: 1px solid #dee2e6; }
@@ -65,9 +51,7 @@
         .summary-item { padding: 10px; background-color: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .summary-label { display: block; font-size: 0.9em; color: #6c757d; margin-bottom: 5px; }
         .summary-value { font-size: 1.2em; font-weight: 600; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
-        .summary-value.income { color: #28a745; }
-        .summary-value.expense { color: #dc3545; }
-        .summary-value.balance { color: #0056b3; }
+        .summary-value.income { color: #28a745; } .summary-value.expense { color: #dc3545; } .summary-value.balance { color: #0056b3; }
         /* Responsive Table Wrapper */
         .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 30px; border: 1px solid #dee2e6; border-radius: 5px;}
         /* Transaction Table */
@@ -78,9 +62,10 @@
         tbody tr:last-child td { border-bottom: none; }
         tbody tr:nth-child(even) { background-color: #f8f9fa; }
         tbody tr:hover { background-color: #e2e6ea; }
-        tbody tr.excluded-row { opacity: 0.6; font-style: italic; }
+        tbody tr.excluded-row { opacity: 0.6; font-style: italic; background-color: #f8f9fa !important; }
         tbody tr.excluded-row:hover { opacity: 0.7; }
         td.amount { text-align: right; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+        /* Use Plaid's original amount sign: > 0 is income */
         td.amount.income { color: #218838; font-weight: 500; }
         td.amount.expense { color: #c82333; }
 
@@ -89,14 +74,11 @@
             body { font-size: 15px; -webkit-text-size-adjust: 100%; }
             .container { width: 100%; margin: 0; padding: 10px; border-radius: 0; box-shadow: none; }
             h1 { font-size: 1.6em; margin-bottom: 15px; }
-            .controls { justify-content: center; gap: 10px; flex-direction: column; align-items: stretch; } /* Stack controls vertically */
-            .controls form { justify-content: center;} /* Center items within forms */
-            .controls .form-clear-exclusions { margin-left: 0; margin-top: 10px; } /* Adjust margin for stacking */
-            .controls input[type="date"] { width: auto; flex-grow: 1;} /* Allow date inputs to grow */
-
-            .summary-grid { gap: 10px; }
-            .summary-item { padding: 8px; }
-            .summary-value { font-size: 1.1em; }
+            .controls { justify-content: center; gap: 10px; flex-direction: column; align-items: stretch; }
+            .controls form { justify-content: center;}
+            .controls .form-clear-exclusions { margin-left: 0; margin-top: 10px; }
+            .controls input[type="date"] { width: auto; flex-grow: 1;}
+            .summary-grid { gap: 10px; } .summary-item { padding: 8px; } .summary-value { font-size: 1.1em; }
             th, td { padding: 10px 12px; }
         }
          @media (max-width: 480px) {
@@ -104,9 +86,7 @@
              .button { font-size: 0.9em; padding: 8px 12px;}
              .controls label { font-size: 0.9em; }
              .controls input[type="date"] { font-size: 0.9em; padding: 6px 8px;}
-             .summary h2 { font-size: 1.1em; }
-             .summary-label { font-size: 0.8em; }
-             .summary-value { font-size: 1em; }
+             .summary h2 { font-size: 1.1em; } .summary-label { font-size: 0.8em; } .summary-value { font-size: 1em; }
              th, td { padding: 8px 10px; font-size: 0.9em;}
              .button-exclude { padding: 1px 5px; font-size: 0.8em;}
          }
@@ -119,88 +99,52 @@
 
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul class="flash-messages">
-                {% for category, message in messages %}
-                    <li class="flash-{{ category }}">{{ message }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
+            {% if messages %} <ul class="flash-messages"> {% for category, message in messages %} <li class="flash-{{ category }}">{{ message }}</li> {% endfor %} </ul> {% endif %}
         {% endwith %}
 
         <!-- Controls -->
         <div class="controls">
-            <form action="{{ url_for('trigger_refresh', start_date=start_date_value, end_date=end_date_value) }}" method="POST"> <!-- Pass dates to refresh -->
-                <button type="submit" class="button button-refresh">Refresh</button>
-            </form>
-            <!-- Date Range Form -->
-            <form action="{{ url_for('index') }}" method="GET" style="flex-grow: 1; justify-content: center;"> <!-- Allow this form to grow -->
-                 <label for="start_date">From:</label>
-                 <input type="date" id="start_date" name="start_date" value="{{ start_date_value }}">
-                 <label for="end_date">To:</label>
-                 <input type="date" id="end_date" name="end_date" value="{{ end_date_value }}">
+            <form action="{{ url_for('trigger_refresh', start_date=start_date_value, end_date=end_date_value) }}" method="POST"> <button type="submit" class="button button-refresh">Refresh</button> </form>
+            <form action="{{ url_for('index') }}" method="GET" style="flex-grow: 1; justify-content: center;">
+                 <label for="start_date">From:</label> <input type="date" id="start_date" name="start_date" value="{{ start_date_value }}">
+                 <label for="end_date">To:</label> <input type="date" id="end_date" name="end_date" value="{{ end_date_value }}">
                  <button type="submit" class="button button-view">View</button>
             </form>
-            <!-- Clear Exclusions Button -->
-            {% if excluded_ids %}
-            <form action="{{ url_for('clear_exclusions', start_date=start_date_value, end_date=end_date_value) }}" method="POST" class="form-clear-exclusions"> <!-- Pass dates -->
-                 <button type="submit" class="button button-clear">Clear Excl. ({{ excluded_ids|length }})</button>
+            <!-- Clear MANUAL Exclusions Button - Use user_excluded_count -->
+            {% if user_excluded_count > 0 %}
+            <form action="{{ url_for('clear_exclusions', start_date=start_date_value, end_date=end_date_value) }}" method="POST" class="form-clear-exclusions">
+                 <button type="submit" class="button button-clear">Clear Manual Excl. ({{ user_excluded_count }})</button>
             </form>
             {% endif %}
         </div>
 
         <!-- Summary Section -->
         <div class="summary">
-            <!-- Display date range in summary -->
-            <h2>Summary ({{ start_date_value }} to {{ end_date_value }}) {% if excluded_ids %}<span style="font-weight: normal; font-size: 0.8em; color: #6c757d;">({{ excluded_ids|length }} item(s) excluded)</span>{% endif %}</h2>
+            <h2>Summary ({{ start_date_value }} to {{ end_date_value }}) {% if combined_excluded_ids %}<span style="font-weight: normal; font-size: 0.8em; color: #6c757d;">({{ combined_excluded_ids|length }} item(s) excluded)</span>{% endif %}</h2>
             <div class="summary-grid">
-                <div class="summary-item">
-                    <span class="summary-label">Income</span>
-                    <!-- Add comma formatting -->
-                    <span class="summary-value income">${{ "{:,.2f}".format(total_income) }}</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Expenses</span>
-                    <!-- Add comma formatting -->
-                    <span class="summary-value expense">${{ "{:,.2f}".format(total_expenses) }}</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Net Balance</span>
-                    <!-- Add comma formatting -->
-                    <span class="summary-value balance {% if balance >= 0 %}income{% else %}expense{% endif %}">
-                       ${{ "{:,.2f}".format(balance) }}
-                    </span>
-                </div>
+                <div class="summary-item"> <span class="summary-label">Income</span> <span class="summary-value income">${{ "{:,.2f}".format(total_income) }}</span> </div>
+                <div class="summary-item"> <span class="summary-label">Expenses</span> <span class="summary-value expense">${{ "{:,.2f}".format(total_expenses) }}</span> </div>
+                <div class="summary-item"> <span class="summary-label">Net Balance</span> <span class="summary-value balance {% if balance >= 0 %}income{% else %}expense{% endif %}"> ${{ "{:,.2f}".format(balance) }} </span> </div>
             </div>
         </div>
 
         <!-- Responsive Table Wrapper -->
         <div class="table-responsive">
             <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Account</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th style="text-align: right;">Amount</th>
-                        <th class="action-col">Action</th>
-                    </tr>
-                </thead>
+                <thead> <tr> <th>Date</th> <th>Account</th> <th>Name</th> <th>Category</th> <th style="text-align: right;">Amount</th> <th class="action-col">Action</th> </tr> </thead>
                 <tbody>
                     {% for transaction in transactions %}
-                    <tr class="{% if transaction.id in excluded_ids %}excluded-row{% endif %}">
+                    <!-- Use combined set for visual exclusion -->
+                    <tr class="{% if transaction.id in combined_excluded_ids %}excluded-row{% endif %}">
                         <td>{{ transaction.date }}</td>
                         <td>{{ transaction.account }}</td>
                         <td>{{ transaction.name }}</td>
                         <td>{{ transaction.category }}</td>
-                        <td class="amount {% if transaction.amount < 0 %}income{% else %}expense{% endif %}">
-                           <!-- Add comma formatting and keep absolute value -->
-                           ${{ "{:,.2f}".format(transaction.amount|abs) }}
-                        </td>
+                        <!-- Apply class based on ORIGINAL amount sign -->
+                        <td class="amount {% if transaction.amount > 0 %}income{% else %}expense{% endif %}"> ${{ "{:,.2f}".format(transaction.amount|abs) }} </td>
                         <td class="action-col">
-                            {% if transaction.id not in excluded_ids %}
-                            <!-- Pass dates to exclude action -->
+                            <!-- Show button only if NOT in combined excluded set -->
+                            {% if transaction.id not in combined_excluded_ids %}
                             <form action="{{ url_for('exclude_transaction', start_date=start_date_value, end_date=end_date_value) }}" method="POST" style="display: inline;">
                                  <input type="hidden" name="transaction_id" value="{{ transaction.id }}">
                                  <button type="submit" class="button button-exclude" title="Exclude from Summary">X</button>
@@ -208,12 +152,7 @@
                             {% endif %}
                         </td>
                     </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;">
-                            No transactions found for the selected period.
-                        </td>
-                    </tr>
+                    {% else %} <tr> <td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;"> No transactions found for the selected period. </td> </tr>
                     {% endfor %}
                 </tbody>
             </table>
