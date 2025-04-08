@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
     <style>
-        /* --- Styles remain the same --- */
+        /* --- Styles remain the same as the previous mobile-friendly version --- */
         /* Basic Reset & Body Style */
         *, *::before, *::after { box-sizing: border-box; }
         body {
@@ -65,9 +65,11 @@
         tbody tr.excluded-row { opacity: 0.6; font-style: italic; background-color: #f8f9fa !important; }
         tbody tr.excluded-row:hover { opacity: 0.7; }
         td.amount { text-align: right; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
-        /* Apply income/expense class based on Plaid's original amount sign */
-        td.amount.income { color: #218838; font-weight: 500; } /* Amount > 0 */
-        td.amount.expense { color: #c82333; }                /* Amount < 0 */
+        /* --- !!! EXPLICITLY INVERTED CSS CLASS LOGIC !!! --- */
+        /* If Plaid amount is NEGATIVE, style as income (green) */
+        td.amount.income { color: #218838; font-weight: 500; }
+        /* If Plaid amount is POSITIVE, style as expense (red) */
+        td.amount.expense { color: #c82333; }
 
         /* Media Queries */
         @media (max-width: 768px) {
@@ -140,8 +142,9 @@
                         <td>{{ transaction.account }}</td>
                         <td>{{ transaction.name }}</td>
                         <td>{{ transaction.category }}</td>
-                        <!-- Apply class based on ORIGINAL amount sign -->
-                        <td class="amount {% if transaction.amount > 0 %}income{% else %}expense{% endif %}">
+                        <!-- !!! EXPLICITLY INVERTED CLASS LOGIC !!! -->
+                        <!-- Apply income style if Plaid amount is NEGATIVE -->
+                        <td class="amount {% if transaction.amount < 0 %}income{% else %}expense{% endif %}">
                            <!-- Display absolute value, format with commas -->
                            ${{ "{:,.2f}".format(transaction.amount|abs) }}
                         </td>
