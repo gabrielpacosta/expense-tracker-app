@@ -24,13 +24,14 @@
         .button-include { background-color: #17a2b8; color: white; padding: 2px 7px; font-size: 0.9em; line-height: 1; border-radius: 3px; font-weight: bold; border: 1px solid #117a8b;} .button-include:hover { background-color: #138496; }
         .button-clear { background-color: #6c757d; } .button-clear:hover { background-color: #5a6268; }
         .controls .form-clear-exclusions { margin-left: auto; }
-        .summary { margin-bottom: 30px; padding: 15px; background-color: #e9ecef; border-radius: 5px; border: 1px solid #dee2e6; }
-        .summary h2 { margin-top: 0; margin-bottom: 15px; text-align: center; font-size: 1.3em; color: #333; }
+        .summary { margin-bottom: 25px; padding: 15px; background-color: #e9ecef; border-radius: 5px; border: 1px solid #dee2e6; }
+        .summary h2 { margin-top: 0; margin-bottom: 15px; text-align: center; font-size: 1.2em; color: #333; }
         .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; text-align: center; }
         .summary-item { padding: 10px; background-color: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .summary-label { display: block; font-size: 0.9em; color: #6c757d; margin-bottom: 5px; }
-        .summary-value { font-size: 1.2em; font-weight: 600; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+        .summary-value { font-size: 1.15em; font-weight: 600; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
         .summary-value.income { color: #28a745; } .summary-value.expense { color: #dc3545; } .summary-value.balance { color: #0056b3; }
+        h3.transaction-list-title { margin-top: 30px; margin-bottom: 15px; font-size: 1.4em; color: #444; border-bottom: 1px solid #ddd; padding-bottom: 5px;}
         .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 30px; border: 1px solid #dee2e6; border-radius: 5px;}
         table { border-collapse: collapse; width: 100%; }
         th, td { border: none; border-bottom: 1px solid #dee2e6; padding: 12px 15px; text-align: left; vertical-align: middle; white-space: nowrap; }
@@ -42,6 +43,7 @@
         tbody tr.excluded-row { opacity: 0.6; font-style: italic; background-color: #f8f9fa !important; }
         tbody tr.excluded-row:hover { opacity: 0.7; }
         td.amount { text-align: right; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+        /* INVERTED CSS CLASS LOGIC for Coloring */
         td.amount.income { color: #218838; font-weight: 500; } /* Plaid Amount < 0 */
         td.amount.expense { color: #c82333; }                /* Plaid Amount > 0 */
         /* Media Queries */
@@ -54,6 +56,7 @@
             .controls .form-clear-exclusions { margin-left: 0; margin-top: 10px; }
             .controls input[type="date"] { width: auto; flex-grow: 1;}
             .summary-grid { gap: 10px; } .summary-item { padding: 8px; } .summary-value { font-size: 1.1em; }
+            h3.transaction-list-title { font-size: 1.2em;}
             th, td { padding: 10px 12px; }
         }
          @media (max-width: 480px) {
@@ -61,7 +64,9 @@
              .button { font-size: 0.9em; padding: 8px 12px;}
              .controls label { font-size: 0.9em; }
              .controls input[type="date"] { font-size: 0.9em; padding: 6px 8px;}
-             .summary h2 { font-size: 1.1em; } .summary-label { font-size: 0.8em; } .summary-value { font-size: 1em; }
+             .summary h2 { font-size: 1.0em; }
+             .summary-label { font-size: 0.8em; } .summary-value { font-size: 1em; }
+             h3.transaction-list-title { font-size: 1.1em;}
              th, td { padding: 8px 10px; font-size: 0.9em;}
              .button-exclude { padding: 1px 5px; font-size: 0.8em;}
              .button-include { padding: 1px 5px; font-size: 0.8em;}
@@ -81,9 +86,9 @@
         <div class="controls">
             <form action="{{ url_for('trigger_refresh', start_date=start_date_value, end_date=end_date_value) }}" method="POST"> <button type="submit" class="button button-refresh">Refresh</button> </form>
             <form action="{{ url_for('index') }}" method="GET" style="flex-grow: 1; justify-content: center;">
-                 <label for="start_date">From:</label> <input type="date" id="start_date" name="start_date" value="{{ start_date_value }}">
+                 <label for="start_date">Filter From:</label> <input type="date" id="start_date" name="start_date" value="{{ start_date_value }}">
                  <label for="end_date">To:</label> <input type="date" id="end_date" name="end_date" value="{{ end_date_value }}">
-                 <button type="submit" class="button button-view">View</button>
+                 <button type="submit" class="button button-view">Filter List</button>
             </form>
             {% if user_excluded_count > 0 %}
             <form action="{{ url_for('clear_exclusions', start_date=start_date_value, end_date=end_date_value) }}" method="POST" class="form-clear-exclusions">
@@ -92,54 +97,68 @@
             {% endif %}
         </div>
 
-        <!-- Summary Section -->
+        <!-- Weekly Summary Section -->
         <div class="summary">
-            <h2>Summary ({{ start_date_value }} to {{ end_date_value }}) {% if combined_excluded_ids %}<span style="font-weight: normal; font-size: 0.8em; color: #6c757d;">({{ combined_excluded_ids|length }} item(s) excluded)</span>{% endif %}</h2>
+            <!-- Use date OBJECTS passed from Flask for formatting -->
+            <h2>This Week Summary ({{ week_start_date.strftime('%d %b %Y') }} to {{ week_end_date.strftime('%d %b %Y') }}) {% if combined_excluded_ids %}<span style="font-weight: normal; font-size: 0.8em; color: #6c757d;">({{ combined_excluded_ids|length }} total item(s) excluded)</span>{% endif %}</h2>
             <div class="summary-grid">
-                <div class="summary-item"> <span class="summary-label">Income</span> <span class="summary-value income">${{ "{:,.2f}".format(total_income) }}</span> </div>
-                <div class="summary-item"> <span class="summary-label">Expenses</span> <span class="summary-value expense">${{ "{:,.2f}".format(total_expenses) }}</span> </div>
-                <div class="summary-item"> <span class="summary-label">Net Balance</span> <span class="summary-value balance {% if balance >= 0 %}income{% else %}expense{% endif %}"> ${{ "{:,.2f}".format(balance) }} </span> </div>
+                <div class="summary-item"> <span class="summary-label">Week Income</span> <span class="summary-value income">${{ "{:,.2f}".format(total_income_week) }}</span> </div>
+                <div class="summary-item"> <span class="summary-label">Week Expenses</span> <span class="summary-value expense">${{ "{:,.2f}".format(total_expenses_week) }}</span> </div>
+                <div class="summary-item"> <span class="summary-label">Week Net</span> <span class="summary-value balance {% if balance_week >= 0 %}income{% else %}expense{% endif %}"> ${{ "{:,.2f}".format(balance_week) }} </span> </div>
             </div>
         </div>
+
+        <!-- Month-to-Date Summary Section -->
+        <div class="summary">
+            <!-- Use date OBJECTS passed from Flask for formatting -->
+            <h2>This Month Summary ({{ month_start_date.strftime('%d %b %Y') }} to {{ month_end_date.strftime('%d %b %Y') }}) {% if combined_excluded_ids %}<span style="font-weight: normal; font-size: 0.8em; color: #6c757d;">({{ combined_excluded_ids|length }} total item(s) excluded)</span>{% endif %}</h2>
+            <div class="summary-grid">
+                <div class="summary-item"> <span class="summary-label">Month Income</span> <span class="summary-value income">${{ "{:,.2f}".format(total_income_mtd) }}</span> </div>
+                <div class="summary-item"> <span class="summary-label">Month Expenses</span> <span class="summary-value expense">${{ "{:,.2f}".format(total_expenses_mtd) }}</span> </div>
+                <div class="summary-item"> <span class="summary-label">Month Net</span> <span class="summary-value balance {% if balance_mtd >= 0 %}income{% else %}expense{% endif %}"> ${{ "{:,.2f}".format(balance_mtd) }} </span> </div>
+            </div>
+        </div>
+
+        <!-- Transaction List Title -->
+        <!-- Use filter date OBJECTS passed from Flask for formatting -->
+        <h3 class="transaction-list-title">Transaction List (Filtered: {{ start_date_filter.strftime('%d %b %Y') }} to {{ end_date_filter.strftime('%d %b %Y') }})</h3>
 
         <!-- Responsive Table Wrapper -->
         <div class="table-responsive">
             <table>
                 <thead> <tr> <th>Date</th> <th>Account</th> <th>Name</th> <th>Category</th> <th style="text-align: right;">Amount</th> <th class="action-col">Action</th> </tr> </thead>
                 <tbody>
+                    {% set found_items = false %}
                     {% for transaction in transactions %}
-                    <tr class="{% if transaction.id in combined_excluded_ids %}excluded-row{% endif %}">
-                        <!-- Apply strftime formatting to the date object -->
-                        <td>{{ transaction.date.strftime('%d %b %Y') }}</td>
-                        <td>{{ transaction.account }}</td>
-                        <td>{{ transaction.name }}</td>
-                        <td>{{ transaction.category }}</td>
-                        <td class="amount {% if transaction.amount < 0 %}income{% else %}expense{% endif %}">
-                           ${{ "{:,.2f}".format(transaction.amount|abs) }}
-                        </td>
-                        <td class="action-col">
-                            {% if transaction.id in user_excluded_ids %}
-                                <form action="{{ url_for('include_transaction', start_date=start_date_value, end_date=end_date_value) }}" method="POST" style="display: inline;">
-                                     <input type="hidden" name="transaction_id" value="{{ transaction.id }}">
-                                     <button type="submit" class="button button-include" title="Include in Summary">+</button>
-                                </form>
-                            {% elif transaction.id not in combined_excluded_ids %}
-                                <form action="{{ url_for('exclude_transaction', start_date=start_date_value, end_date=end_date_value) }}" method="POST" style="display: inline;">
-                                     <input type="hidden" name="transaction_id" value="{{ transaction.id }}">
-                                     <button type="submit" class="button button-exclude" title="Exclude from Summary">X</button>
-                                </form>
-                            {% else %}
-                                 
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% else %} <tr> <td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;"> No transactions found for the selected period. </td> </tr>
+                        {% if transaction.date >= start_date_filter and transaction.date <= end_date_filter %}
+                            {% set found_items = true %}
+                            <tr class="{% if transaction.id in combined_excluded_ids %}excluded-row{% endif %}">
+                                <td>{{ transaction.date.strftime('%d %b %Y') }}</td>
+                                <td>{{ transaction.account }}</td>
+                                <td>{{ transaction.name }}</td>
+                                <td>{{ transaction.category }}</td>
+                                <!-- Use INVERTED logic for class based on amount sign -->
+                                <td class="amount {% if transaction.amount < 0 %}income{% else %}expense{% endif %}">
+                                   ${{ "{:,.2f}".format(transaction.amount|abs) }}
+                                </td>
+                                <td class="action-col">
+                                    {% if transaction.id in user_excluded_ids %}
+                                        <form action="{{ url_for('include_transaction', start_date=start_date_value, end_date=end_date_value) }}" method="POST" style="display: inline;"> <input type="hidden" name="transaction_id" value="{{ transaction.id }}"> <button type="submit" class="button button-include" title="Include in Summary">+</button> </form>
+                                    {% elif transaction.id not in combined_excluded_ids %}
+                                        <form action="{{ url_for('exclude_transaction', start_date=start_date_value, end_date=end_date_value) }}" method="POST" style="display: inline;"> <input type="hidden" name="transaction_id" value="{{ transaction.id }}"> <button type="submit" class="button button-exclude" title="Exclude from Summary">X</button> </form>
+                                    {% else %}  
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endif %}
                     {% endfor %}
+                    {% if not found_items %}
+                         <tr> <td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;"> No transactions found for the selected filter dates. </td> </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div> <!-- End table-responsive -->
 
     </div> <!-- End container -->
-
 </body>
 </html>
