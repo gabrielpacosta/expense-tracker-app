@@ -42,23 +42,18 @@ def get_target_week_dates():
     Returns the Monday (start_date) of the target week.
     """
     today_date = datetime.date.today()
-    # Calculate current week's Monday
     current_week_monday_offset = today_date.weekday() # Monday is 0
     current_week_monday = today_date - datetime.timedelta(days=current_week_monday_offset)
-
     target_week_start_str = request.args.get('week_start')
     target_week_start = current_week_monday # Default
-
     if target_week_start_str:
         try:
             parsed_date = datetime.datetime.strptime(target_week_start_str, '%Y-%m-%d').date()
-            # Ensure the parsed date is actually a Monday for consistency
             parsed_offset = parsed_date.weekday()
             target_week_start = parsed_date - datetime.timedelta(days=parsed_offset)
         except ValueError:
             flash("Invalid week_start date format in URL. Using current week.", "warning")
             target_week_start = current_week_monday
-
     return target_week_start
 
 # --- Plaid Client Setup ---
@@ -159,66 +154,65 @@ def index():
     if 'user_excluded_ids' not in session: session['user_excluded_ids'] = []
     user_excluded_ids = session['user_excluded_ids'] # Manual list
 
-    # --- Determine Date Ranges ---
+    # Determine Target Week Dates
     today_date = datetime.date.today()
-    # Target week (from query param or default=current)
     target_week_start = get_target_week_dates()
     target_week_end = target_week_start + datetime.timedelta(days=6)
-    # Navigation dates
     prev_week_start = target_week_start - datetime.timedelta(days=7)
     next_week_start = target_week_start + datetime.timedelta(days=7)
-    # Is the target week the current week? (For disabling 'Next')
     current_week_monday_offset = today_date.weekday()
     current_week_monday = today_date - datetime.timedelta(days=current_week_monday_offset)
     is_current_week = (target_week_start == current_week_monday)
-    # Month-to-date range (always current month)
+
+    # Fixed Month-to-Date range
     month_start_date = today_date.replace(day=1)
     month_end_date = today_date
 
     plaid_client = initialize_plaid_client()
-    all_mtd_transactions = [] # Fetch all MTD transactions once
-
-    # Initialize summary variables
+    all_mtd_transactions = []
+    transactions_to_display = [] # Initialize empty list for target week's transactions
     total_income_mtd = 0.0; total_expenses_mtd = 0.0; balance_mtd = 0.0
     total_income_week = 0.0; total_expenses_week = 0.0; balance_week = 0.0
-
     combined_excluded_ids = set(user_excluded_ids) # Start with user exclusions SET
+    excluded_in_target_week_count = 0 # Initialize week-specific count
 
     if plaid_client and PLAID_ACCESS_TOKEN:
         print(f"Fetching ALL Plaid transactions from {month_start_date} to {month_end_date}")
         all_mtd_transactions = get_plaid_transactions(
-            plaid_client,
-            PLAID_ACCESS_TOKEN,
-            month_start_date,
-            month_end_date
+            plaid_client, PLAID_ACCESS_TOKEN, month_start_date, month_end_date
         )
 
         if all_mtd_transactions is not None:
             auto_excluded_ids = find_and_exclude_offsetting_transfers(all_mtd_transactions)
-            combined_excluded_ids.update(auto_excluded_ids) # Add auto-excluded
+            combined_excluded_ids.update(auto_excluded_ids)
 
-            # --- Calculate BOTH Summaries ---
-            for t in all_mtd_transactions:
-                if t['id'] in combined_excluded_ids: continue
-
-                # MTD Calculation (always uses all_mtd_transactions)
-                if t['amount'] < 0: total_income_mtd += abs(t['amount'])
-                elif t['amount'] > 0: total_expenses_mtd += t['amount']
-
-                # TARGET Week Calculation (check date range)
-                if target_week_start <= t['date'] <= target_week_end:
-                    if t['amount'] < 0: total_income_week += abs(t['amount'])
-                    elif t['amount'] > 0: total_expenses_week += t['amount']
-
-            balance_mtd = total_income_mtd - total_expenses_mtd
-            balance_week = total_income_week - total_expenses_week
-
-            # --- Filter transactions for display (only target week) ---
+            # Filter transactions for the target week display FIRST
             transactions_to_display = [
                 t for t in all_mtd_transactions
                 if target_week_start <= t['date'] <= target_week_end
             ]
-            # ---
+
+            # Calculate MTD and Weekly summaries from ALL MTD data
+            for t in all_mtd_transactions:
+                is_excluded = (t['id'] in combined_excluded_ids)
+                is_in_target_week = (target_week_start <= t['date'] <= target_week_end)
+
+                # Calculate MTD Totals (if not excluded)
+                if not is_excluded:
+                    if t['amount'] < 0: total_income_mtd += abs(t['amount'])
+                    elif t['amount'] > 0: total_expenses_mtd += t['amount']
+
+                # Calculate Weekly Totals (if not excluded AND in target week)
+                if not is_excluded and is_in_target_week:
+                    if t['amount'] < 0: total_income_week += abs(t['amount'])
+                    elif t['amount'] > 0: total_expenses_week += t['amount']
+
+                # Count exclusions visible in the target week
+                if is_excluded and is_in_target_week:
+                     excluded_in_target_week_count += 1
+
+            balance_mtd = total_income_mtd - total_expenses_mtd
+            balance_week = total_income_week - total_expenses_week
 
     elif not PLAID_ACCESS_TOKEN: flash("PLAID_ACCESS_TOKEN_PRIMARY not found in .env file.", "danger")
     else: pass # Error flashed in client init
@@ -236,22 +230,21 @@ def index():
         total_income_week=total_income_week,
         total_expenses_week=total_expenses_week,
         balance_week=balance_week,
-        target_week_start=target_week_start, # Pass date objects for title format
-        target_week_end=target_week_end,     # Pass date objects for title format
+        target_week_start=target_week_start,
+        target_week_end=target_week_end,
         # Navigation Data
         prev_week_start_str=prev_week_start.strftime('%Y-%m-%d'),
         next_week_start_str=next_week_start.strftime('%Y-%m-%d'),
         is_current_week=is_current_week,
         # Exclusion Data
-        combined_excluded_ids=combined_excluded_ids,
-        user_excluded_ids=user_excluded_ids,
-        user_excluded_count=len(user_excluded_ids)
+        combined_excluded_ids=combined_excluded_ids, # Still needed for row dimming/buttons
+        user_excluded_ids=user_excluded_ids, # Still needed for include/exclude logic
+        user_excluded_count=len(user_excluded_ids), # Still needed for clear button
+        excluded_in_target_week_count=excluded_in_target_week_count # NEW week-specific count
         )
 
-
 # --- Other Routes (Refresh, Exclude, Clear) ---
-# Make sure redirects use the TARGET WEEK start date from query args
-
+# (Remain the same, pass 'week_start')
 @app.route('/refresh', methods=['POST'])
 def trigger_refresh():
     print("Route requested: /refresh (POST)")
@@ -261,7 +254,7 @@ def trigger_refresh():
 
 @app.route('/exclude', methods=['POST'])
 def exclude_transaction():
-    # (Logic for adding to user list remains the same)
+    # (Logic remains the same)
     transaction_id = request.form.get('transaction_id')
     if transaction_id:
         if 'user_excluded_ids' not in session: session['user_excluded_ids'] = []
@@ -271,8 +264,7 @@ def exclude_transaction():
             print(f"User excluded transaction ID: {transaction_id}"); flash(f'Transaction {transaction_id[:8]}... manually excluded.', 'warning')
         else: flash(f'Transaction {transaction_id[:8]}... was already manually excluded.', 'info')
     else: flash('Could not exclude transaction: ID missing.', 'danger')
-    week_start = request.args.get('week_start') # Preserve target week
-    return redirect(url_for('index', week_start=week_start))
+    week_start = request.args.get('week_start'); return redirect(url_for('index', week_start=week_start))
 
 @app.route('/include', methods=['POST'])
 def include_transaction():
@@ -287,8 +279,7 @@ def include_transaction():
             else: flash(f'Transaction {transaction_id[:8]}... was not manually excluded.', 'warning')
         else: flash('No manual exclusions list found.', 'warning')
     else: flash('Could not include transaction: ID missing.', 'danger')
-    week_start = request.args.get('week_start') # Preserve target week
-    return redirect(url_for('index', week_start=week_start))
+    week_start = request.args.get('week_start'); return redirect(url_for('index', week_start=week_start))
 
 @app.route('/clear_exclusions', methods=['POST'])
 def clear_exclusions():
@@ -297,12 +288,11 @@ def clear_exclusions():
         session.pop('user_excluded_ids'); print("Cleared USER excluded transaction IDs.")
         flash('Manually excluded transactions reset.', 'info')
     else: flash('No manual exclusions to clear.', 'info')
-    week_start = request.args.get('week_start') # Preserve target week
-    return redirect(url_for('index', week_start=week_start))
+    week_start = request.args.get('week_start'); return redirect(url_for('index', week_start=week_start))
 
 # --- Run the App ---
 if __name__ == '__main__':
     # (Warnings and app.run remain the same)
     if not app.secret_key or app.secret_key == "default-insecure-key-set-in-environment": print("\n*** WARNING: Flask Secret Key is not securely set! ***\n*** Session data will not persist reliably between browser restarts. Set FLASK_SECRET_KEY in your .env file. ***\n")
     print("Starting Flask development server...")
-    app.run(debug=False, port=5001)
+    app.run(debug=False, port=5001) # Use debug=False for deployment
