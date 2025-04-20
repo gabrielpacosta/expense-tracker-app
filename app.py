@@ -10,6 +10,7 @@ from flask import Flask, render_template, redirect, url_for, flash, request, ses
 from dotenv import load_dotenv
 
 # --- Plaid Client Libraries ---
+# (Imports remain the same)
 from plaid.api import plaid_api
 from plaid.model.transactions_get_request import TransactionsGetRequest
 from plaid.model.transactions_get_request_options import TransactionsGetRequestOptions
@@ -22,6 +23,7 @@ import plaid
 load_dotenv()
 
 # --- Flask App Initialization ---
+# (Initialization remains the same)
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 if not app.secret_key:
@@ -29,18 +31,15 @@ if not app.secret_key:
     app.secret_key = "default-insecure-key-set-in-environment"
 
 # --- Plaid Configuration ---
+# (Configuration remains the same)
 PLAID_CLIENT_ID = os.getenv("PLAID_CLIENT_ID")
 PLAID_SECRET = os.getenv("PLAID_SECRET")
 PLAID_ENV = os.getenv("PLAID_ENV", "sandbox")
 PLAID_ACCESS_TOKEN = os.getenv("PLAID_ACCESS_TOKEN_PRIMARY")
 
 # --- Helper Function to get TARGET WEEK dates ---
+# (get_target_week_dates function remains the same)
 def get_target_week_dates():
-    """
-    Determines the start date of the target week based on query param 'week_start'.
-    Defaults to the current week's Monday if not provided or invalid.
-    Returns the Monday (start_date) of the target week.
-    """
     today_date = datetime.date.today()
     current_week_monday_offset = today_date.weekday() # Monday is 0
     current_week_monday = today_date - datetime.timedelta(days=current_week_monday_offset)
@@ -56,9 +55,10 @@ def get_target_week_dates():
             target_week_start = current_week_monday
     return target_week_start
 
+
 # --- Plaid Client Setup ---
+# (initialize_plaid_client function remains the same)
 def initialize_plaid_client():
-    # (Function remains the same)
     try:
         environment_urls = { 'sandbox': 'https://sandbox.plaid.com', 'development': 'https://development.plaid.com', 'production': 'https://production.plaid.com', }
         plaid_env_key = PLAID_ENV.lower() if PLAID_ENV else 'sandbox'
@@ -72,10 +72,10 @@ def initialize_plaid_client():
         return client
     except Exception as e: print(f"Error initializing Plaid client: {e}"); import traceback; traceback.print_exc(); flash(f"Error initializing Plaid client. Check terminal logs.", "danger"); return None
 
-
 # --- Plaid Data Fetching Function ---
+# (get_plaid_transactions function remains the same - returns original amounts)
 def get_plaid_transactions(client, access_token, start_date, end_date):
-    # (Function remains the same - returns original amounts)
+    """ Fetches transactions, expects date objects for start/end """
     if not client or not access_token: flash("Plaid client or access token is missing. Check .env configuration.", "danger"); return None
     try:
         accounts_request = AccountsGetRequest(access_token=access_token)
@@ -100,7 +100,7 @@ def get_plaid_transactions(client, access_token, start_date, end_date):
             formatted_transactions.append({
                 'id': t['transaction_id'], 'date': t['date'], 'account': account_name,
                 'name': t['name'], 'amount': amount, 'category': category_str,
-                'category_list': category_list
+                'category_list': category_list # Keep original list for checking
             })
         formatted_transactions.sort(key=lambda x: x['date'], reverse=True)
         return formatted_transactions
@@ -115,14 +115,17 @@ def get_plaid_transactions(client, access_token, start_date, end_date):
         return None
 
 # --- Function to find and exclude offsetting transfers ---
+# (find_and_exclude_offsetting_transfers function remains the same)
 def find_and_exclude_offsetting_transfers(transactions, days_window=2):
-    # (Function remains the same)
     excluded_ids = set(); amount_groups = defaultdict(list)
     for t in transactions:
         is_potential_transfer = False
+        # Refined check: Look for 'Transfer' as the primary category
         if t['category_list'] and t['category_list'][0].lower() == 'transfer': is_potential_transfer = True
+        # Keep name checks as backup/alternative
         name_lower = t['name'].lower()
         if 'online transfer' in name_lower or 'transfer from' in name_lower or 'transfer to' in name_lower: is_potential_transfer = True
+
         if is_potential_transfer: amount_groups[abs(t['amount'])].append(t)
     print(f"Found {len(amount_groups)} potential transfer amount groups.")
     processed_ids = set()
@@ -143,6 +146,32 @@ def find_and_exclude_offsetting_transfers(transactions, days_window=2):
     print(f"Auto-excluding {len(excluded_ids)} offsetting transfer transactions.")
     return excluded_ids
 
+# --- Function to identify Rent transactions ---
+def is_rent_transaction(transaction):
+    """ Checks if a transaction is likely rent. Customize logic as needed. """
+    # --- !! CUSTOMIZE THIS SECTION !! ---
+    # Option 1: Check category hierarchy (more specific)
+    # Example: Plaid's detailed category for rent
+    rent_category_path = ["service", "financial", "rent and mortgage"]
+    # Check if the transaction's category list matches the start of the rent path
+    if transaction['category_list'] and len(transaction['category_list']) >= len(rent_category_path):
+         if all(c.lower() == rent_category_path[i] for i, c in enumerate(transaction['category_list'][:len(rent_category_path)])):
+             print(f"Identified as Rent by category: {transaction['name']} | {transaction['category']}")
+             return True
+
+    # Option 2: Check simpler category terms (broader)
+    if 'rent' in transaction['category'].lower():
+        print(f"Identified as Rent by category keyword: {transaction['name']} | {transaction['category']}")
+        return True
+
+    # Option 3: Check transaction name (less reliable, use specific patterns)
+    name_lower = transaction['name'].lower()
+    if 'rent payment' in name_lower or 'mthly rent' in name_lower: # Add your landlord's name or specific memo text
+        print(f"Identified as Rent by name: {transaction['name']}")
+        return True
+    # --- End Customization ---
+
+    return False
 
 # --- Flask Routes ---
 
@@ -152,9 +181,9 @@ def index():
     print("Route requested: / (index)")
 
     if 'user_excluded_ids' not in session: session['user_excluded_ids'] = []
-    user_excluded_ids = session['user_excluded_ids'] # Manual list
+    user_excluded_ids = session['user_excluded_ids']
 
-    # Determine Target Week Dates
+    # Determine Target Week Dates & MTD Dates
     today_date = datetime.date.today()
     target_week_start = get_target_week_dates()
     target_week_end = target_week_start + datetime.timedelta(days=6)
@@ -163,18 +192,17 @@ def index():
     current_week_monday_offset = today_date.weekday()
     current_week_monday = today_date - datetime.timedelta(days=current_week_monday_offset)
     is_current_week = (target_week_start == current_week_monday)
-
-    # Fixed Month-to-Date range
     month_start_date = today_date.replace(day=1)
     month_end_date = today_date
 
     plaid_client = initialize_plaid_client()
     all_mtd_transactions = []
-    transactions_to_display = [] # Initialize empty list for target week's transactions
+    transactions_to_display = []
     total_income_mtd = 0.0; total_expenses_mtd = 0.0; balance_mtd = 0.0
     total_income_week = 0.0; total_expenses_week = 0.0; balance_week = 0.0
-    combined_excluded_ids = set(user_excluded_ids) # Start with user exclusions SET
-    excluded_in_target_week_count = 0 # Initialize week-specific count
+    rent_total_mtd = 0.0 # <--- Initialize Rent Total for MTD
+    excluded_in_target_week_count = 0
+    combined_excluded_ids = set(user_excluded_ids)
 
     if plaid_client and PLAID_ACCESS_TOKEN:
         print(f"Fetching ALL Plaid transactions from {month_start_date} to {month_end_date}")
@@ -186,43 +214,56 @@ def index():
             auto_excluded_ids = find_and_exclude_offsetting_transfers(all_mtd_transactions)
             combined_excluded_ids.update(auto_excluded_ids)
 
-            # Filter transactions for the target week display FIRST
-            transactions_to_display = [
-                t for t in all_mtd_transactions
-                if target_week_start <= t['date'] <= target_week_end
-            ]
+            transactions_to_display = [t for t in all_mtd_transactions if target_week_start <= t['date'] <= target_week_end]
 
-            # Calculate MTD and Weekly summaries from ALL MTD data
+            # --- Calculate Summaries ---
             for t in all_mtd_transactions:
                 is_excluded = (t['id'] in combined_excluded_ids)
                 is_in_target_week = (target_week_start <= t['date'] <= target_week_end)
-
-                # Calculate MTD Totals (if not excluded)
-                if not is_excluded:
-                    if t['amount'] < 0: total_income_mtd += abs(t['amount'])
-                    elif t['amount'] > 0: total_expenses_mtd += t['amount']
-
-                # Calculate Weekly Totals (if not excluded AND in target week)
-                if not is_excluded and is_in_target_week:
-                    if t['amount'] < 0: total_income_week += abs(t['amount'])
-                    elif t['amount'] > 0: total_expenses_week += t['amount']
 
                 # Count exclusions visible in the target week
                 if is_excluded and is_in_target_week:
                      excluded_in_target_week_count += 1
 
+                # Skip excluded items for financial calculations
+                if is_excluded:
+                    continue
+
+                # Identify rent transactions (only need to do this once per transaction)
+                is_rent = is_rent_transaction(t)
+
+                # Calculate MTD totals (using inverted logic as requested)
+                if t['amount'] < 0: # Income
+                    total_income_mtd += abs(t['amount'])
+                elif t['amount'] > 0: # Expense
+                    current_expense = t['amount']
+                    total_expenses_mtd += current_expense
+                    # Add to rent total if it's a rent expense
+                    if is_rent:
+                        rent_total_mtd += current_expense
+
+                # Calculate Weekly totals (if in target week)
+                if is_in_target_week:
+                    if t['amount'] < 0: # Income
+                        total_income_week += abs(t['amount'])
+                    elif t['amount'] > 0: # Expense
+                        total_expenses_week += t['amount']
+
             balance_mtd = total_income_mtd - total_expenses_mtd
             balance_week = total_income_week - total_expenses_week
+            # Calculate MTD expenses without rent
+            total_expenses_mtd_without_rent = total_expenses_mtd - rent_total_mtd
 
     elif not PLAID_ACCESS_TOKEN: flash("PLAID_ACCESS_TOKEN_PRIMARY not found in .env file.", "danger")
-    else: pass # Error flashed in client init
+    else: pass
 
     return render_template(
         'index.html',
-        transactions=transactions_to_display, # Pass only the filtered list for display
+        transactions=transactions_to_display,
         # MTD Summary Data
         total_income_mtd=total_income_mtd,
         total_expenses_mtd=total_expenses_mtd,
+        total_expenses_mtd_without_rent=total_expenses_mtd_without_rent, # <-- Pass new value
         balance_mtd=balance_mtd,
         month_start_date=month_start_date,
         month_end_date=month_end_date,
@@ -237,10 +278,10 @@ def index():
         next_week_start_str=next_week_start.strftime('%Y-%m-%d'),
         is_current_week=is_current_week,
         # Exclusion Data
-        combined_excluded_ids=combined_excluded_ids, # Still needed for row dimming/buttons
-        user_excluded_ids=user_excluded_ids, # Still needed for include/exclude logic
-        user_excluded_count=len(user_excluded_ids), # Still needed for clear button
-        excluded_in_target_week_count=excluded_in_target_week_count # NEW week-specific count
+        combined_excluded_ids=combined_excluded_ids,
+        user_excluded_ids=user_excluded_ids,
+        user_excluded_count=len(user_excluded_ids),
+        excluded_in_target_week_count=excluded_in_target_week_count
         )
 
 # --- Other Routes (Refresh, Exclude, Clear) ---
@@ -249,12 +290,10 @@ def index():
 def trigger_refresh():
     print("Route requested: /refresh (POST)")
     flash('Refreshing transaction data...', 'info')
-    week_start = request.args.get('week_start') # Preserve target week
-    return redirect(url_for('index', week_start=week_start))
+    week_start = request.args.get('week_start'); return redirect(url_for('index', week_start=week_start))
 
 @app.route('/exclude', methods=['POST'])
 def exclude_transaction():
-    # (Logic remains the same)
     transaction_id = request.form.get('transaction_id')
     if transaction_id:
         if 'user_excluded_ids' not in session: session['user_excluded_ids'] = []
@@ -268,7 +307,6 @@ def exclude_transaction():
 
 @app.route('/include', methods=['POST'])
 def include_transaction():
-    # (Logic remains the same)
     transaction_id = request.form.get('transaction_id')
     if transaction_id:
         if 'user_excluded_ids' in session:
@@ -283,7 +321,6 @@ def include_transaction():
 
 @app.route('/clear_exclusions', methods=['POST'])
 def clear_exclusions():
-    # (Logic remains the same)
     if 'user_excluded_ids' in session and session['user_excluded_ids']:
         session.pop('user_excluded_ids'); print("Cleared USER excluded transaction IDs.")
         flash('Manually excluded transactions reset.', 'info')
@@ -292,7 +329,6 @@ def clear_exclusions():
 
 # --- Run the App ---
 if __name__ == '__main__':
-    # (Warnings and app.run remain the same)
     if not app.secret_key or app.secret_key == "default-insecure-key-set-in-environment": print("\n*** WARNING: Flask Secret Key is not securely set! ***\n*** Session data will not persist reliably between browser restarts. Set FLASK_SECRET_KEY in your .env file. ***\n")
     print("Starting Flask development server...")
     app.run(debug=False, port=5001) # Use debug=False for deployment

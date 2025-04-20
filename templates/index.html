@@ -24,10 +24,11 @@
         .controls .form-clear-exclusions { margin-left: auto; }
         .summary { margin-bottom: 25px; padding: 15px; background-color: #e9ecef; border-radius: 5px; border: 1px solid #dee2e6; }
         .summary h2 { margin-top: 0; margin-bottom: 15px; text-align: center; font-size: 1.2em; color: #333; }
-        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; text-align: center; }
+        /* Adjust grid for potentially 4 items in MTD */
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* Slightly smaller min */ gap: 12px; /* Slightly smaller gap */ text-align: center; }
         .summary-item { padding: 10px; background-color: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .summary-label { display: block; font-size: 0.9em; color: #6c757d; margin-bottom: 5px; }
-        .summary-value { font-size: 1.15em; font-weight: 600; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+        .summary-label { display: block; font-size: 0.85em; /* Slightly smaller label */ color: #6c757d; margin-bottom: 5px; }
+        .summary-value { font-size: 1.1em; /* Slightly smaller value */ font-weight: 600; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
         .summary-value.income { color: #28a745; } .summary-value.expense { color: #dc3545; } .summary-value.balance { color: #0056b3; }
         h3.transaction-list-title { margin-top: 30px; margin-bottom: 15px; font-size: 1.4em; color: #444; border-bottom: 1px solid #ddd; padding-bottom: 5px;}
         .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 30px; border: 1px solid #dee2e6; border-radius: 5px;}
@@ -41,6 +42,7 @@
         tbody tr.excluded-row { opacity: 0.6; font-style: italic; background-color: #f8f9fa !important; }
         tbody tr.excluded-row:hover { opacity: 0.7; }
         td.amount { text-align: right; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+        /* INVERTED CSS CLASS LOGIC for Coloring */
         td.amount.income { color: #218838; font-weight: 500; } /* Plaid Amount < 0 */
         td.amount.expense { color: #c82333; }                /* Plaid Amount > 0 */
         /* Media Queries */
@@ -67,6 +69,7 @@
              .controls { flex-direction: column; align-items: stretch;}
              .controls form { justify-content: center; width: 100%;}
              .controls .form-clear-exclusions { margin-top: 10px; }
+             .summary-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); } /* Allow more items */
          }
     </style>
 </head>
@@ -79,23 +82,18 @@
             {% if messages %} <ul class="flash-messages"> {% for category, message in messages %} <li class="flash-{{ category }}">{{ message }}</li> {% endfor %} </ul> {% endif %}
         {% endwith %}
 
-        <!-- Controls with Week Navigation -->
+        <!-- Controls -->
         <div class="controls">
             <a href="{{ url_for('index', week_start=prev_week_start_str) }}" class="button button-nav">< Prev Week</a>
-            <form action="{{ url_for('trigger_refresh', week_start=target_week_start.strftime('%Y-%m-%d')) }}" method="POST">
-                 <button type="submit" class="button button-refresh">Refresh</button>
-            </form>
+            <form action="{{ url_for('trigger_refresh', week_start=target_week_start.strftime('%Y-%m-%d')) }}" method="POST"> <button type="submit" class="button button-refresh">Refresh</button> </form>
             <a href="{{ url_for('index', week_start=next_week_start_str) }}" class="button button-nav {% if is_current_week %}disabled{% endif %}">Next Week ></a>
             {% if user_excluded_count > 0 %}
-            <form action="{{ url_for('clear_exclusions', week_start=target_week_start.strftime('%Y-%m-%d')) }}" method="POST" class="form-clear-exclusions">
-                 <button type="submit" class="button button-clear">Clear Manual Excl. ({{ user_excluded_count }})</button>
-            </form>
+            <form action="{{ url_for('clear_exclusions', week_start=target_week_start.strftime('%Y-%m-%d')) }}" method="POST" class="form-clear-exclusions"> <button type="submit" class="button button-clear">Clear Manual Excl. ({{ user_excluded_count }})</button> </form>
             {% endif %}
         </div>
 
         <!-- TARGET Week Summary Section -->
         <div class="summary">
-            <!-- Use the week-specific count -->
             <h2>Week Summary ({{ target_week_start.strftime('%d %b %Y') }} to {{ target_week_end.strftime('%d %b %Y') }}) {% if excluded_in_target_week_count > 0 %}<span style="font-weight: normal; font-size: 0.8em; color: #6c757d;">({{ excluded_in_target_week_count }} item(s) excluded this week)</span>{% endif %}</h2>
             <div class="summary-grid">
                 <div class="summary-item"> <span class="summary-label">Week Income</span> <span class="summary-value income">${{ "{:,.2f}".format(total_income_week) }}</span> </div>
@@ -106,11 +104,16 @@
 
         <!-- Month-to-Date Summary Section -->
         <div class="summary">
-            <!-- Use the count of ALL excluded items affecting MTD -->
             <h2>This Month Summary ({{ month_start_date.strftime('%d %b %Y') }} to {{ month_end_date.strftime('%d %b %Y') }}) {% if combined_excluded_ids %}<span style="font-weight: normal; font-size: 0.8em; color: #6c757d;">({{ combined_excluded_ids|length }} total item(s) excluded)</span>{% endif %}</h2>
+            <!-- Modified Grid for 4 items -->
             <div class="summary-grid">
                 <div class="summary-item"> <span class="summary-label">Month Income</span> <span class="summary-value income">${{ "{:,.2f}".format(total_income_mtd) }}</span> </div>
                 <div class="summary-item"> <span class="summary-label">Month Expenses</span> <span class="summary-value expense">${{ "{:,.2f}".format(total_expenses_mtd) }}</span> </div>
+                <!-- New Item for Expenses w/o Rent -->
+                <div class="summary-item">
+                    <span class="summary-label">Expenses (No Rent)</span>
+                    <span class="summary-value expense">${{ "{:,.2f}".format(total_expenses_mtd_without_rent) }}</span>
+                </div>
                 <div class="summary-item"> <span class="summary-label">Month Net</span> <span class="summary-value balance {% if balance_mtd >= 0 %}income{% else %}expense{% endif %}"> ${{ "{:,.2f}".format(balance_mtd) }} </span> </div>
             </div>
         </div>
@@ -123,14 +126,13 @@
             <table>
                 <thead> <tr> <th>Date</th> <th>Account</th> <th>Name</th> <th>Category</th> <th style="text-align: right;">Amount</th> <th class="action-col">Action</th> </tr> </thead>
                 <tbody>
-                    <!-- Loop through PRE-FILTERED transactions for the target week -->
-                    {% for transaction in transactions %}
+                    {% set found_items = false %}
+                    {% for transaction in transactions %} {# <-- Iterates pre-filtered transactions_to_display #}
                         <tr class="{% if transaction.id in combined_excluded_ids %}excluded-row{% endif %}">
                             <td>{{ transaction.date.strftime('%d %b %Y') }}</td>
                             <td>{{ transaction.account }}</td>
                             <td>{{ transaction.name }}</td>
                             <td>{{ transaction.category }}</td>
-                            <!-- Use INVERTED logic for class based on amount sign -->
                             <td class="amount {% if transaction.amount < 0 %}income{% else %}expense{% endif %}"> ${{ "{:,.2f}".format(transaction.amount|abs) }} </td>
                             <td class="action-col">
                                 {% if transaction.id in user_excluded_ids %}
@@ -141,9 +143,12 @@
                                 {% endif %}
                             </td>
                         </tr>
-                    {% else %}
-                        <tr> <td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;"> No transactions found for the selected week. </td> </tr>
+                        {% set found_items = true %} {# Set flag inside the loop after potentially displaying a row #}
                     {% endfor %}
+
+                    {% if not found_items %} {# Show only if the loop never ran (no items in the filtered list) #}
+                         <tr> <td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;"> No transactions found for the selected week. </td> </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div> <!-- End table-responsive -->
