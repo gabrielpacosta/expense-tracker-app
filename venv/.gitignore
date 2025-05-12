@@ -1,11 +1,2 @@
-# Virtual Environment
-venv/
-*.pyc
-__pycache__/
-
-# Secrets / Credentials
-.env # Keep this!
-
-# OS specific
-.DS_Store
-Thumbs.db
+# Created by venv; see https://docs.python.org/3/library/venv.html
+*

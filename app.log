@@ -1,0 +1,334 @@
+2025-05-12 12:22:07,297 INFO: Environment variables loaded
+2025-05-12 12:22:07,298 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=NOT SET
+2025-05-12 12:22:07,299 INFO: Starting Flask development server...
+2025-05-12 12:22:07,360 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-05-12 12:22:07,361 INFO: [33mPress CTRL+C to quit[0m
+2025-05-12 12:22:07,362 INFO:  * Restarting with stat
+2025-05-12 12:22:07,793 INFO: Environment variables loaded
+2025-05-12 12:22:07,794 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=NOT SET
+2025-05-12 12:22:07,795 INFO: Starting Flask development server...
+2025-05-12 12:22:07,805 WARNING:  * Debugger is active!
+2025-05-12 12:22:07,807 INFO:  * Debugger PIN: 652-138-797
+2025-05-12 12:24:05,263 INFO:  * Detected change in 'C:\\Users\\Gabriel\\OneDrive\\Coding\\Expense Tracker\\app.py', reloading
+2025-05-12 12:24:05,303 INFO:  * Restarting with stat
+2025-05-12 12:33:32,625 INFO: Application starting...
+2025-05-12 12:33:32,626 INFO: Environment variables loaded
+2025-05-12 12:33:32,627 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=NOT SET
+2025-05-12 12:33:32,628 INFO: Starting Flask development server...
+2025-05-12 12:33:32,636 WARNING:  * Debugger is active!
+2025-05-12 12:33:32,638 INFO:  * Debugger PIN: 652-138-797
+2025-05-12 12:33:38,048 INFO: Application starting...
+2025-05-12 12:33:38,049 INFO: Environment variables loaded
+2025-05-12 12:33:38,050 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=NOT SET
+2025-05-12 12:33:38,051 INFO: Starting Flask development server...
+2025-05-12 12:33:38,066 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-05-12 12:33:38,067 INFO: [33mPress CTRL+C to quit[0m
+2025-05-12 12:33:38,067 INFO:  * Restarting with stat
+2025-05-12 12:33:38,495 INFO: Application starting...
+2025-05-12 12:33:38,496 INFO: Environment variables loaded
+2025-05-12 12:33:38,497 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=NOT SET
+2025-05-12 12:33:38,498 INFO: Starting Flask development server...
+2025-05-12 12:33:38,505 WARNING:  * Debugger is active!
+2025-05-12 12:33:38,507 INFO:  * Debugger PIN: 652-138-797
+2025-05-12 12:33:45,217 INFO: Route requested: / (index)
+2025-05-12 12:33:45,217 DEBUG: No week_start in URL. Using current week: 2025-05-12
+2025-05-12 12:33:45,218 DEBUG: Initializing Plaid client for index route
+2025-05-12 12:33:45,219 INFO: Plaid client initialized successfully for production environment.
+2025-05-12 12:33:45,219 ERROR: PLAID_ACCESS_TOKEN_PRIMARY not found in .env file. Skipping Plaid data fetch.
+2025-05-12 12:33:45,219 DEBUG: Rendering template
+2025-05-12 12:33:45,244 INFO: 127.0.0.1 - - [12/May/2025 12:33:45] "GET / HTTP/1.1" 200 -
+2025-05-12 13:08:29,971 INFO: Application starting...
+2025-05-12 13:08:29,972 INFO: Environment variables loaded
+2025-05-12 13:08:29,973 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:08:29,974 INFO: Starting Flask development server...
+2025-05-12 13:08:29,994 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-05-12 13:08:29,994 INFO: [33mPress CTRL+C to quit[0m
+2025-05-12 13:08:29,995 INFO:  * Restarting with stat
+2025-05-12 13:08:30,483 INFO: Application starting...
+2025-05-12 13:08:30,485 INFO: Environment variables loaded
+2025-05-12 13:08:30,486 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:08:30,487 INFO: Starting Flask development server...
+2025-05-12 13:08:30,495 WARNING:  * Debugger is active!
+2025-05-12 13:08:30,497 INFO:  * Debugger PIN: 373-319-023
+2025-05-12 13:08:44,324 INFO: Route requested: / (index)
+2025-05-12 13:08:44,324 DEBUG: No week_start in URL. Using current week: 2025-05-12
+2025-05-12 13:08:44,324 DEBUG: Initializing Plaid client for index route
+2025-05-12 13:08:44,326 INFO: Plaid client initialized successfully for production environment.
+2025-05-12 13:08:44,326 INFO: Attempting to fetch ALL Plaid transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:08:44,326 DEBUG: Fetching accounts for access token: access-p...
+2025-05-12 13:08:44,722 DEBUG: Retrieved 2 accounts
+2025-05-12 13:08:44,722 DEBUG: Fetching transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:08:45,258 INFO: Fetched 27 transactions from Plaid for range 2025-05-01 to 2025-05-12.
+2025-05-12 13:08:45,258 ERROR: An unexpected error occurred fetching Plaid data: strptime() argument 1 must be str, not datetime.date
+Traceback (most recent call last):
+  File "C:\Users\Gabriel\OneDrive\Coding\Expense Tracker\app.py", line 220, in get_plaid_transactions
+    transaction_date = datetime.datetime.strptime(t['date'], '%Y-%m-%d').date() # Ensure date is a date object
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: strptime() argument 1 must be str, not datetime.date
+2025-05-12 13:08:45,259 WARNING: get_plaid_transactions returned None. Summary calculations skipped.
+2025-05-12 13:08:45,259 DEBUG: Rendering template
+2025-05-12 13:08:45,270 INFO: 127.0.0.1 - - [12/May/2025 13:08:45] "GET / HTTP/1.1" 200 -
+2025-05-12 13:09:23,301 INFO:  * Detected change in 'C:\\Users\\Gabriel\\OneDrive\\Coding\\Expense Tracker\\app.py', reloading
+2025-05-12 13:09:23,354 INFO:  * Restarting with stat
+2025-05-12 13:09:30,901 INFO: Application starting...
+2025-05-12 13:09:30,902 INFO: Environment variables loaded
+2025-05-12 13:09:30,903 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:09:30,904 INFO: Starting Flask development server...
+2025-05-12 13:09:30,919 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-05-12 13:09:30,919 INFO: [33mPress CTRL+C to quit[0m
+2025-05-12 13:09:30,920 INFO:  * Restarting with stat
+2025-05-12 13:09:31,347 INFO: Application starting...
+2025-05-12 13:09:31,349 INFO: Environment variables loaded
+2025-05-12 13:09:31,350 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:09:31,351 INFO: Starting Flask development server...
+2025-05-12 13:09:31,359 WARNING:  * Debugger is active!
+2025-05-12 13:09:31,361 INFO:  * Debugger PIN: 373-319-023
+2025-05-12 13:09:33,715 INFO: Route requested: / (index)
+2025-05-12 13:09:33,715 DEBUG: No week_start in URL. Using current week: 2025-05-12
+2025-05-12 13:09:33,715 DEBUG: Initializing Plaid client for index route
+2025-05-12 13:09:33,717 INFO: Plaid client initialized successfully for production environment.
+2025-05-12 13:09:33,717 INFO: Attempting to fetch ALL Plaid transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:09:33,717 DEBUG: Fetching accounts for access token: access-p...
+2025-05-12 13:09:34,096 DEBUG: Retrieved 2 accounts
+2025-05-12 13:09:34,096 DEBUG: Fetching transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:09:34,628 INFO: Fetched 27 transactions from Plaid for range 2025-05-01 to 2025-05-12.
+2025-05-12 13:09:34,628 DEBUG: Successfully fetched 44 transactions.
+2025-05-12 13:09:34,628 DEBUG: Finding offsetting transfers in 44 transactions
+2025-05-12 13:09:34,628 DEBUG: Found 2 potential transfer amount groups.
+2025-05-12 13:09:34,628 DEBUG: Found offsetting pair: Income=-2246.00 (Deposit Online Transfer from Savings Regular 3130/2025-05-04) and Expense=2246.00 (Withdrawal Online Transfer to Everyday Spending 9895/2025-05-04) within 0 days.
+2025-05-12 13:09:34,629 INFO: Auto-excluding 2 offsetting transfer transactions.
+2025-05-12 13:09:34,629 DEBUG: Total excluded IDs (user + auto): 2
+2025-05-12 13:09:34,629 DEBUG: Found 12 transactions within the target week range for display.
+2025-05-12 13:09:34,629 DEBUG: Calculating MTD financial summaries
+2025-05-12 13:09:34,629 DEBUG: Calculating Weekly financial summaries and counting weekly exclusions
+2025-05-12 13:09:34,629 DEBUG: Financial summary calculated: Week Income=$0.00, Week Expenses=$143.96, Week Net=$-143.96. Month Income=$0.58, Month Expenses=$5174.76, Month Expenses (No Rent)=$682.76, Month Net=$-5174.18. Rent=$4492.00
+2025-05-12 13:09:34,629 DEBUG: Rendering template
+2025-05-12 13:09:34,639 INFO: 127.0.0.1 - - [12/May/2025 13:09:34] "GET / HTTP/1.1" 200 -
+2025-05-12 13:09:45,619 INFO: Route requested: / (index)
+2025-05-12 13:09:45,622 DEBUG: Using week_start from URL: 2025-05-05
+2025-05-12 13:09:45,622 DEBUG: Initializing Plaid client for index route
+2025-05-12 13:09:45,624 INFO: Plaid client initialized successfully for production environment.
+2025-05-12 13:09:45,624 INFO: Attempting to fetch ALL Plaid transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:09:45,624 DEBUG: Fetching accounts for access token: access-p...
+2025-05-12 13:09:45,937 DEBUG: Retrieved 2 accounts
+2025-05-12 13:09:45,937 DEBUG: Fetching transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:09:46,459 INFO: Fetched 27 transactions from Plaid for range 2025-05-01 to 2025-05-12.
+2025-05-12 13:09:46,460 DEBUG: Successfully fetched 44 transactions.
+2025-05-12 13:09:46,460 DEBUG: Finding offsetting transfers in 44 transactions
+2025-05-12 13:09:46,460 DEBUG: Found 2 potential transfer amount groups.
+2025-05-12 13:09:46,460 DEBUG: Found offsetting pair: Income=-2246.00 (Deposit Online Transfer from Savings Regular 3130/2025-05-04) and Expense=2246.00 (Withdrawal Online Transfer to Everyday Spending 9895/2025-05-04) within 0 days.
+2025-05-12 13:09:46,460 INFO: Auto-excluding 2 offsetting transfer transactions.
+2025-05-12 13:09:46,460 DEBUG: Total excluded IDs (user + auto): 2
+2025-05-12 13:09:46,460 DEBUG: Found 20 transactions within the target week range for display.
+2025-05-12 13:09:46,461 DEBUG: Calculating MTD financial summaries
+2025-05-12 13:09:46,461 DEBUG: Calculating Weekly financial summaries and counting weekly exclusions
+2025-05-12 13:09:46,461 DEBUG: Financial summary calculated: Week Income=$0.00, Week Expenses=$4939.64, Week Net=$-4939.64. Month Income=$0.58, Month Expenses=$5174.76, Month Expenses (No Rent)=$682.76, Month Net=$-5174.18. Rent=$4492.00
+2025-05-12 13:09:46,461 DEBUG: Rendering template
+2025-05-12 13:09:46,463 INFO: 127.0.0.1 - - [12/May/2025 13:09:46] "GET /?week_start=2025-05-05 HTTP/1.1" 200 -
+2025-05-12 13:09:53,792 INFO: User excluded transaction ID: bgd1jkkvN5HxpzXbq4ezs5OO6b8vJXugoy0py
+2025-05-12 13:09:53,792 INFO: 127.0.0.1 - - [12/May/2025 13:09:53] "[32mPOST /exclude?week_start=2025-05-05 HTTP/1.1[0m" 302 -
+2025-05-12 13:09:53,795 INFO: Route requested: / (index)
+2025-05-12 13:09:53,795 DEBUG: Using week_start from URL: 2025-05-05
+2025-05-12 13:09:53,795 DEBUG: Initializing Plaid client for index route
+2025-05-12 13:09:53,796 INFO: Plaid client initialized successfully for production environment.
+2025-05-12 13:09:53,796 INFO: Attempting to fetch ALL Plaid transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:09:53,796 DEBUG: Fetching accounts for access token: access-p...
+2025-05-12 13:09:54,135 DEBUG: Retrieved 2 accounts
+2025-05-12 13:09:54,135 DEBUG: Fetching transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:09:54,639 INFO: Fetched 27 transactions from Plaid for range 2025-05-01 to 2025-05-12.
+2025-05-12 13:09:54,640 DEBUG: Successfully fetched 44 transactions.
+2025-05-12 13:09:54,640 DEBUG: Finding offsetting transfers in 44 transactions
+2025-05-12 13:09:54,640 DEBUG: Found 2 potential transfer amount groups.
+2025-05-12 13:09:54,640 DEBUG: Found offsetting pair: Income=-2246.00 (Deposit Online Transfer from Savings Regular 3130/2025-05-04) and Expense=2246.00 (Withdrawal Online Transfer to Everyday Spending 9895/2025-05-04) within 0 days.
+2025-05-12 13:09:54,640 INFO: Auto-excluding 2 offsetting transfer transactions.
+2025-05-12 13:09:54,640 DEBUG: Total excluded IDs (user + auto): 3
+2025-05-12 13:09:54,640 DEBUG: Found 20 transactions within the target week range for display.
+2025-05-12 13:09:54,641 DEBUG: Calculating MTD financial summaries
+2025-05-12 13:09:54,641 DEBUG: Calculating Weekly financial summaries and counting weekly exclusions
+2025-05-12 13:09:54,641 DEBUG: Financial summary calculated: Week Income=$0.00, Week Expenses=$447.64, Week Net=$-447.64. Month Income=$0.58, Month Expenses=$682.76, Month Expenses (No Rent)=$682.76, Month Net=$-682.18. Rent=$0.00
+2025-05-12 13:09:54,641 DEBUG: Rendering template
+2025-05-12 13:09:54,643 INFO: 127.0.0.1 - - [12/May/2025 13:09:54] "GET /?week_start=2025-05-05 HTTP/1.1" 200 -
+2025-05-12 13:10:03,198 INFO: Route requested: / (index)
+2025-05-12 13:10:03,199 DEBUG: Using week_start from URL: 2025-05-12
+2025-05-12 13:10:03,199 DEBUG: Initializing Plaid client for index route
+2025-05-12 13:10:03,200 INFO: Plaid client initialized successfully for production environment.
+2025-05-12 13:10:03,201 INFO: Attempting to fetch ALL Plaid transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:10:03,201 DEBUG: Fetching accounts for access token: access-p...
+2025-05-12 13:10:03,587 DEBUG: Retrieved 2 accounts
+2025-05-12 13:10:03,587 DEBUG: Fetching transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:10:04,128 INFO: Fetched 27 transactions from Plaid for range 2025-05-01 to 2025-05-12.
+2025-05-12 13:10:04,129 DEBUG: Successfully fetched 44 transactions.
+2025-05-12 13:10:04,129 DEBUG: Finding offsetting transfers in 44 transactions
+2025-05-12 13:10:04,129 DEBUG: Found 2 potential transfer amount groups.
+2025-05-12 13:10:04,129 DEBUG: Found offsetting pair: Income=-2246.00 (Deposit Online Transfer from Savings Regular 3130/2025-05-04) and Expense=2246.00 (Withdrawal Online Transfer to Everyday Spending 9895/2025-05-04) within 0 days.
+2025-05-12 13:10:04,129 INFO: Auto-excluding 2 offsetting transfer transactions.
+2025-05-12 13:10:04,129 DEBUG: Total excluded IDs (user + auto): 3
+2025-05-12 13:10:04,129 DEBUG: Found 12 transactions within the target week range for display.
+2025-05-12 13:10:04,130 DEBUG: Calculating MTD financial summaries
+2025-05-12 13:10:04,130 DEBUG: Calculating Weekly financial summaries and counting weekly exclusions
+2025-05-12 13:10:04,130 DEBUG: Financial summary calculated: Week Income=$0.00, Week Expenses=$143.96, Week Net=$-143.96. Month Income=$0.58, Month Expenses=$682.76, Month Expenses (No Rent)=$682.76, Month Net=$-682.18. Rent=$0.00
+2025-05-12 13:10:04,130 DEBUG: Rendering template
+2025-05-12 13:10:04,132 INFO: 127.0.0.1 - - [12/May/2025 13:10:04] "GET /?week_start=2025-05-12 HTTP/1.1" 200 -
+2025-05-12 13:13:45,585 INFO:  * Detected change in 'C:\\Users\\Gabriel\\OneDrive\\Coding\\Expense Tracker\\app.py', reloading
+2025-05-12 13:13:45,631 INFO:  * Restarting with stat
+2025-05-12 13:13:46,107 INFO: Application starting...
+2025-05-12 13:13:46,108 INFO: Environment variables loaded
+2025-05-12 13:13:46,109 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:13:46,110 INFO: Starting Flask development server...
+2025-05-12 13:13:46,118 WARNING:  * Debugger is active!
+2025-05-12 13:13:46,120 INFO:  * Debugger PIN: 373-319-023
+2025-05-12 13:13:48,648 INFO: Route requested: / (index)
+2025-05-12 13:13:48,650 DEBUG: Using week_start from URL: 2025-05-12
+2025-05-12 13:13:48,650 DEBUG: Initializing Plaid client for index route
+2025-05-12 13:13:48,651 INFO: Plaid client initialized successfully for production environment.
+2025-05-12 13:13:48,652 INFO: Attempting to fetch ALL Plaid transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:13:48,652 DEBUG: Fetching accounts for access token: access-p...
+2025-05-12 13:13:48,952 DEBUG: Retrieved 2 accounts
+2025-05-12 13:13:48,952 DEBUG: Fetching transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:13:49,496 INFO: Fetched 27 transactions from Plaid for range 2025-05-01 to 2025-05-12.
+2025-05-12 13:13:49,496 DEBUG: Successfully fetched 22 transactions for MTD period.
+2025-05-12 13:13:49,496 DEBUG: Finding offsetting transfers in 22 transactions
+2025-05-12 13:13:49,496 DEBUG: Found 2 potential transfer amount groups.
+2025-05-12 13:13:49,496 DEBUG: Found offsetting pair: Income ID=EoK14qqA... Amount=-2246.00 (Deposit Online Transfer from Savings Regular 3130/2025-05-04) and Expense ID=3VExNoov... Amount=2246.00 (Withdrawal Online Transfer to Everyday Spending 9895/2025-05-04) within 0 days.
+2025-05-12 13:13:49,496 INFO: Auto-excluding 2 offsetting transfer transactions.
+2025-05-12 13:13:49,496 INFO: Total auto-excluded IDs: 2. Total combined excluded IDs: 3. Total user excluded IDs: 1
+2025-05-12 13:13:49,497 DEBUG: Calculating MTD financial summaries (excluding combined_excluded_ids)
+2025-05-12 13:13:49,497 DEBUG: Filtered 6 transactions for display in target week (2025-05-12 to 2025-05-18).
+2025-05-12 13:13:49,497 DEBUG: Calculating Weekly financial summaries and counting weekly exclusions (based on transactions_to_display)
+2025-05-12 13:13:49,497 DEBUG: Financial summary calculated: Week Income=$0.00, Week Expenses=$71.98, Week Net=$-71.98. Month Income=$0.29, Month Expenses=$341.38, Month Expenses (No Rent)=$341.38, Month Net=$-341.09. Rent=$0.00
+2025-05-12 13:13:49,497 DEBUG: Rendering template
+2025-05-12 13:13:49,497 ERROR: Fatal error in index route: cannot access local variable 'excluded_in_target_week_count' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Gabriel\OneDrive\Coding\Expense Tracker\app.py", line 723, in index
+    excluded_in_target_week_count=excluded_in_target_week_count
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'excluded_in_target_week_count' where it is not associated with a value
+2025-05-12 13:13:49,499 INFO: 127.0.0.1 - - [12/May/2025 13:13:49] "[35m[1mGET /?week_start=2025-05-12 HTTP/1.1[0m" 500 -
+2025-05-12 13:14:04,081 INFO: Route requested: / (index)
+2025-05-12 13:14:04,081 DEBUG: Using week_start from URL: 2025-05-12
+2025-05-12 13:14:04,082 DEBUG: Initializing Plaid client for index route
+2025-05-12 13:14:04,084 INFO: Plaid client initialized successfully for production environment.
+2025-05-12 13:14:04,084 INFO: Attempting to fetch ALL Plaid transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:14:04,084 DEBUG: Fetching accounts for access token: access-p...
+2025-05-12 13:14:04,382 DEBUG: Retrieved 2 accounts
+2025-05-12 13:14:04,382 DEBUG: Fetching transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:14:04,896 INFO: Fetched 27 transactions from Plaid for range 2025-05-01 to 2025-05-12.
+2025-05-12 13:14:04,896 DEBUG: Successfully fetched 22 transactions for MTD period.
+2025-05-12 13:14:04,896 DEBUG: Finding offsetting transfers in 22 transactions
+2025-05-12 13:14:04,896 DEBUG: Found 2 potential transfer amount groups.
+2025-05-12 13:14:04,897 DEBUG: Found offsetting pair: Income ID=EoK14qqA... Amount=-2246.00 (Deposit Online Transfer from Savings Regular 3130/2025-05-04) and Expense ID=3VExNoov... Amount=2246.00 (Withdrawal Online Transfer to Everyday Spending 9895/2025-05-04) within 0 days.
+2025-05-12 13:14:04,897 INFO: Auto-excluding 2 offsetting transfer transactions.
+2025-05-12 13:14:04,897 INFO: Total auto-excluded IDs: 2. Total combined excluded IDs: 3. Total user excluded IDs: 1
+2025-05-12 13:14:04,897 DEBUG: Calculating MTD financial summaries (excluding combined_excluded_ids)
+2025-05-12 13:14:04,897 DEBUG: Filtered 6 transactions for display in target week (2025-05-12 to 2025-05-18).
+2025-05-12 13:14:04,897 DEBUG: Calculating Weekly financial summaries and counting weekly exclusions (based on transactions_to_display)
+2025-05-12 13:14:04,897 DEBUG: Financial summary calculated: Week Income=$0.00, Week Expenses=$71.98, Week Net=$-71.98. Month Income=$0.29, Month Expenses=$341.38, Month Expenses (No Rent)=$341.38, Month Net=$-341.09. Rent=$0.00
+2025-05-12 13:14:04,897 DEBUG: Rendering template
+2025-05-12 13:14:04,898 ERROR: Fatal error in index route: cannot access local variable 'excluded_in_target_week_count' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Gabriel\OneDrive\Coding\Expense Tracker\app.py", line 723, in index
+    excluded_in_target_week_count=excluded_in_target_week_count
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'excluded_in_target_week_count' where it is not associated with a value
+2025-05-12 13:14:04,899 INFO: 127.0.0.1 - - [12/May/2025 13:14:04] "[35m[1mGET /?week_start=2025-05-12 HTTP/1.1[0m" 500 -
+2025-05-12 13:14:27,573 INFO:  * Detected change in 'C:\\Users\\Gabriel\\OneDrive\\Coding\\Expense Tracker\\app.py', reloading
+2025-05-12 13:14:27,648 INFO:  * Restarting with stat
+2025-05-12 13:14:28,228 INFO: Application starting...
+2025-05-12 13:14:28,230 INFO: Environment variables loaded
+2025-05-12 13:14:28,231 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:14:28,232 INFO: Starting Flask development server...
+2025-05-12 13:14:28,241 WARNING:  * Debugger is active!
+2025-05-12 13:14:28,243 INFO:  * Debugger PIN: 373-319-023
+2025-05-12 13:14:29,351 INFO:  * Detected change in 'C:\\Users\\Gabriel\\OneDrive\\Coding\\Expense Tracker\\app.py', reloading
+2025-05-12 13:14:29,394 INFO:  * Restarting with stat
+2025-05-12 13:14:29,873 INFO: Application starting...
+2025-05-12 13:14:29,875 INFO: Environment variables loaded
+2025-05-12 13:14:29,876 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:14:29,877 INFO: Starting Flask development server...
+2025-05-12 13:14:29,885 WARNING:  * Debugger is active!
+2025-05-12 13:14:29,887 INFO:  * Debugger PIN: 373-319-023
+2025-05-12 13:15:13,334 INFO:  * Detected change in 'C:\\Users\\Gabriel\\OneDrive\\Coding\\Expense Tracker\\app.py', reloading
+2025-05-12 13:15:13,389 INFO:  * Restarting with stat
+2025-05-12 13:15:13,899 INFO: Application starting...
+2025-05-12 13:15:13,900 INFO: Environment variables loaded
+2025-05-12 13:15:13,900 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:15:14,512 INFO: Application starting...
+2025-05-12 13:15:14,513 INFO: Environment variables loaded
+2025-05-12 13:15:14,514 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:15:23,395 INFO: Application starting...
+2025-05-12 13:15:23,396 INFO: Environment variables loaded
+2025-05-12 13:15:23,397 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:16:15,187 INFO: Application starting...
+2025-05-12 13:16:15,188 INFO: Environment variables loaded
+2025-05-12 13:16:15,189 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:16:15,190 INFO: Starting Flask development server...
+2025-05-12 13:16:15,205 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-05-12 13:16:15,206 INFO: [33mPress CTRL+C to quit[0m
+2025-05-12 13:16:15,207 INFO:  * Restarting with stat
+2025-05-12 13:16:15,635 INFO: Application starting...
+2025-05-12 13:16:15,636 INFO: Environment variables loaded
+2025-05-12 13:16:15,637 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:16:15,638 INFO: Starting Flask development server...
+2025-05-12 13:16:15,646 WARNING:  * Debugger is active!
+2025-05-12 13:16:15,648 INFO:  * Debugger PIN: 373-319-023
+2025-05-12 13:16:20,867 INFO: Route requested: / (index)
+2025-05-12 13:16:20,868 DEBUG: No week_start in URL. Using current week: 2025-05-12
+2025-05-12 13:16:20,868 DEBUG: Initializing Plaid client for index route
+2025-05-12 13:16:20,870 INFO: Plaid client initialized successfully for production environment.
+2025-05-12 13:16:20,870 INFO: Attempting to fetch ALL Plaid transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:16:20,870 DEBUG: Fetching accounts for access token: access-p...
+2025-05-12 13:16:21,222 DEBUG: Retrieved 2 accounts
+2025-05-12 13:16:21,222 DEBUG: Fetching transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:16:21,899 INFO: Fetched 27 transactions from Plaid for range 2025-05-01 to 2025-05-12.
+2025-05-12 13:16:21,899 DEBUG: Successfully fetched 22 transactions for MTD period.
+2025-05-12 13:16:21,899 DEBUG: Finding offsetting transfers in 22 transactions
+2025-05-12 13:16:21,900 DEBUG: Found 2 potential transfer amount groups.
+2025-05-12 13:16:21,900 DEBUG: Found offsetting pair: Income ID=EoK14qqA... Amount=-2246.00 (Deposit Online Transfer from Savings Regular 3130/2025-05-04) and Expense ID=3VExNoov... Amount=2246.00 (Withdrawal Online Transfer to Everyday Spending 9895/2025-05-04) within 0 days.
+2025-05-12 13:16:21,900 INFO: Auto-excluding 2 offsetting transfer transactions.
+2025-05-12 13:16:21,900 INFO: Total auto-excluded IDs: 2. Total combined excluded IDs: 3. Total user excluded IDs: 1
+2025-05-12 13:16:21,900 DEBUG: Calculating MTD financial summaries (excluding combined_excluded_ids)
+2025-05-12 13:16:21,900 DEBUG: Filtered 6 transactions for display in target week (2025-05-12 to 2025-05-18).
+2025-05-12 13:16:21,900 DEBUG: Calculating Weekly financial summaries and counting weekly exclusions (based on transactions_to_display)
+2025-05-12 13:16:21,900 DEBUG: Financial summary calculated: Week Income=$0.00, Week Expenses=$71.98, Week Net=$-71.98. Month Income=$0.29, Month Expenses=$341.38, Month Expenses (No Rent)=$341.38, Month Net=$-341.09. Rent=$0.00
+2025-05-12 13:16:21,900 DEBUG: Rendering template with excluded_in_target_week_count=0
+2025-05-12 13:16:21,922 INFO: 127.0.0.1 - - [12/May/2025 13:16:21] "GET / HTTP/1.1" 200 -
+2025-05-12 13:16:36,629 INFO: Route requested: / (index)
+2025-05-12 13:16:36,631 DEBUG: Using week_start from URL: 2025-05-05
+2025-05-12 13:16:36,631 DEBUG: Initializing Plaid client for index route
+2025-05-12 13:16:36,634 INFO: Plaid client initialized successfully for production environment.
+2025-05-12 13:16:36,634 INFO: Attempting to fetch ALL Plaid transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:16:36,634 DEBUG: Fetching accounts for access token: access-p...
+2025-05-12 13:16:36,941 DEBUG: Retrieved 2 accounts
+2025-05-12 13:16:36,941 DEBUG: Fetching transactions from 2025-05-01 to 2025-05-12
+2025-05-12 13:16:37,546 INFO: Fetched 27 transactions from Plaid for range 2025-05-01 to 2025-05-12.
+2025-05-12 13:16:37,546 DEBUG: Successfully fetched 22 transactions for MTD period.
+2025-05-12 13:16:37,546 DEBUG: Finding offsetting transfers in 22 transactions
+2025-05-12 13:16:37,546 DEBUG: Found 2 potential transfer amount groups.
+2025-05-12 13:16:37,546 DEBUG: Found offsetting pair: Income ID=EoK14qqA... Amount=-2246.00 (Deposit Online Transfer from Savings Regular 3130/2025-05-04) and Expense ID=3VExNoov... Amount=2246.00 (Withdrawal Online Transfer to Everyday Spending 9895/2025-05-04) within 0 days.
+2025-05-12 13:16:37,546 INFO: Auto-excluding 2 offsetting transfer transactions.
+2025-05-12 13:16:37,547 INFO: Total auto-excluded IDs: 2. Total combined excluded IDs: 3. Total user excluded IDs: 1
+2025-05-12 13:16:37,547 DEBUG: Calculating MTD financial summaries (excluding combined_excluded_ids)
+2025-05-12 13:16:37,547 DEBUG: Filtered 10 transactions for display in target week (2025-05-05 to 2025-05-11).
+2025-05-12 13:16:37,547 DEBUG: Calculating Weekly financial summaries and counting weekly exclusions (based on transactions_to_display)
+2025-05-12 13:16:37,547 DEBUG: Financial summary calculated: Week Income=$0.00, Week Expenses=$223.82, Week Net=$-223.82. Month Income=$0.29, Month Expenses=$341.38, Month Expenses (No Rent)=$341.38, Month Net=$-341.09. Rent=$0.00
+2025-05-12 13:16:37,547 DEBUG: Rendering template with excluded_in_target_week_count=1
+2025-05-12 13:16:37,549 INFO: 127.0.0.1 - - [12/May/2025 13:16:37] "GET /?week_start=2025-05-05 HTTP/1.1" 200 -
+2025-05-12 13:18:12,337 INFO: Application starting...
+2025-05-12 13:18:12,338 INFO: Environment variables loaded
+2025-05-12 13:18:12,339 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:18:12,340 INFO: Starting Flask development server...
+2025-05-12 13:18:12,359 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-05-12 13:18:12,360 INFO: [33mPress CTRL+C to quit[0m
+2025-05-12 13:18:12,361 INFO:  * Restarting with stat
+2025-05-12 13:18:12,829 INFO: Application starting...
+2025-05-12 13:18:12,831 INFO: Environment variables loaded
+2025-05-12 13:18:12,831 INFO: Plaid configuration: ENV=production, CLIENT_ID=SET, SECRET=SET, ACCESS_TOKEN=SET
+2025-05-12 13:18:12,833 INFO: Starting Flask development server...
+2025-05-12 13:18:12,841 WARNING:  * Debugger is active!
+2025-05-12 13:18:12,844 INFO:  * Debugger PIN: 373-319-023
